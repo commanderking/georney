@@ -89,17 +89,23 @@
 }
 
 .step {
+  font-size: 1rem;
   margin: 1rem;
   margin: 0rem 1rem;
   flex-basis: max-content;
   padding: 0.5rem;
   text-align: left;
   color: inherit;
-  border: 1px solid #eaeaea;
+  border: 2px solid $HINGE_PURPLE_COLOR;
   border-radius: 5px;
   transition: color 0.15s ease, border-color 0.15s ease;
   cursor: pointer;
-  background-color: $SENT_LIKE;
+  background-color: white;
+
+  a: {
+    decoration: none;
+    color: inherit;
+  }
 }
 
 .card {

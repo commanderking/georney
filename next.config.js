@@ -1,7 +1,8 @@
 module.exports = {
   sassOptions: {
     prependData: `
-        $SENT_LIKE: #ffd1dc;
+        $HINGE_PINK_COLOR: #ffd1dc;
+        $HINGE_PURPLE_COLOR: #B19CD9;
       `,
   },
 };

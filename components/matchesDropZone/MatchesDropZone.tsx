@@ -1,6 +1,6 @@
 import React from "react";
 import { useDropzone } from "react-dropzone";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 
 const MatchesDropZone = () => {
   const onDrop = (acceptedFiles) => {

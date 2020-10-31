@@ -32,14 +32,12 @@ export default function Home() {
             .
           </small>
           <div className={styles.actions}>
-            <button className={styles.step}>
-              <a
-                href="https://hingeapp.zendesk.com/hc/en-us/articles/360011235813-How-do-I-request-a-copy-of-my-personal-data-"
-                target="_blank"
-              >
-                Get my Hinge Data
-              </a>
-            </button>
+            <a
+              href="https://hingeapp.zendesk.com/hc/en-us/articles/360011235813-How-do-I-request-a-copy-of-my-personal-data-"
+              target="_blank"
+            >
+              <button className={styles.step}>Get my Hinge Data</button>
+            </a>
 
             <button
               className={styles.step}
