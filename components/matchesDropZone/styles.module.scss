@@ -1,0 +1,17 @@
+.wrapper {
+  padding: 10px 50px;
+  background-color: $HINGE_PINK_COLOR;
+  border-radius: 5px;
+  border: 1px dashed black;
+  margin: 5px;
+  cursor: pointer;
+  width: 80%;
+  min-width: 300px;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.wrapper:hover {
+  background-color: lightpink;
+  border: 1px solid black;
+}

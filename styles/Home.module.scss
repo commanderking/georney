@@ -8,8 +8,15 @@
 }
 
 .main {
-  padding: 5rem 0;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.splash {
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -49,7 +56,7 @@
 .title {
   margin: 0;
   line-height: 1.15;
-  font-size: 4rem;
+  font-size: 3.5rem;
 }
 
 .title,
@@ -62,15 +69,6 @@
   font-size: 1.5rem;
 }
 
-.code {
-  background: #fafafa;
-  border-radius: 5px;
-  padding: 0.75rem;
-  font-size: 1.1rem;
-  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-    Bitstream Vera Sans Mono, Courier New, monospace;
-}
-
 .grid {
   display: flex;
   align-items: center;
@@ -78,6 +76,34 @@
   flex-wrap: wrap;
   max-width: 800px;
   margin-top: 3rem;
+}
+
+.actions {
+  margin-top: 3rem;
+}
+
+.dropZoneText {
+  width: 80%;
+  text-align: center;
+  font-size: 0.7rem;
+}
+
+.step {
+  font-size: 1rem;
+  margin: auto;
+  padding: 0.5rem;
+  text-align: left;
+  color: inherit;
+  border: 2px solid $HINGE_PURPLE_COLOR;
+  border-radius: 5px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+  background-color: white;
+
+  a: {
+    decoration: none;
+    color: inherit;
+  }
 }
 
 .card {
@@ -90,6 +116,11 @@
   border: 1px solid #eaeaea;
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.examples {
+  min-height: 100vh;
+  width: 100%;
 }
 
 .card:hover,

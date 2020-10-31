@@ -7,10 +7,12 @@ body {
 }
 
 a {
-  color: inherit;
+  /* color: inherit; */
   text-decoration: none;
 }
 
 * {
   box-sizing: border-box;
 }
+
+$SENT_LIKE: #ffd1dc;
