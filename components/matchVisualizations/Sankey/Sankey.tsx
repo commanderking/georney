@@ -2,6 +2,8 @@ import React from "react";
 import { ResponsiveSankey } from "@nivo/sankey";
 import { getSankeyData } from "../utils";
 import { colorMap } from "../constants";
+import styles from "./styles.module.css";
+
 type Props = {
   activityMap: any;
 };
@@ -13,7 +15,7 @@ const splitId = (label: string) => {
 const Sankey = ({ activityMap }: Props) => {
   const data = getSankeyData(activityMap);
   return (
-    <div style={{ height: "600px", marginBottom: "100px" }}>
+    <div className={styles.wrapper}>
       <ResponsiveSankey
         data={data}
         colors={[

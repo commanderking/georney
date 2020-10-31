@@ -1,8 +1,8 @@
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
-import MatchesDropZone from "../components/matchesDropZone/MatchesDropZone.tsx";
+import styles from "../styles/Home.module.scss";
+import MatchesDropZone from "components/matchesDropZone/MatchesDropZone";
 import { useRef } from "react";
-import Sankey from "components/matchVisualizations/components/Sankey";
+import Sankey from "components/matchVisualizations/Sankey/Sankey";
 import activities from "data/matches.json";
 import { getActivitiesByMatchType } from "components/matchVisualizations/utils";
 
