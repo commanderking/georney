@@ -1,5 +1,6 @@
 import React from "react";
 import { useDropzone } from "react-dropzone";
+import styles from "./styles.module.css";
 
 const MatchesDropZone = () => {
   const onDrop = (acceptedFiles) => {
@@ -8,8 +9,8 @@ const MatchesDropZone = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <div {...getRootProps()}>
-      <input {...getInputProps()} />
+    <div className={styles.wrapper} {...getRootProps()}>
+      <input {...getInputProps()} accept=".json" />
       {isDragActive ? (
         <p>Drop the files here ...</p>
       ) : (
