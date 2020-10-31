@@ -3,6 +3,7 @@ import styles from "../styles/Home.module.scss";
 import MatchesDropZone from "components/matchesDropZone/MatchesDropZone";
 import { useRef } from "react";
 import Sankey from "components/matchVisualizations/Sankey/Sankey";
+import Calendar from "components/matchVisualizations/Calendar/Calendar";
 import activities from "data/matches.json";
 import { getActivitiesByMatchType } from "components/matchVisualizations/utils";
 
@@ -54,6 +55,10 @@ export default function Home() {
         <div className={styles.examples} id="examples" ref={examplesRef}>
           <h3>Flow Chart (Sankey)</h3>
           <Sankey activityMap={activityMap} />
+          <div>
+            <h3>Calendar Heat Map</h3>
+            <Calendar activities={activities} />
+          </div>
         </div>
         {/* <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>

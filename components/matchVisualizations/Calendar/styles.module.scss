@@ -1,0 +1,13 @@
+.wrapper {
+}
+
+.svgWrapper {
+  height: 400px;
+  width: 100%;
+  max-width: 800px;
+  overflow-x: scroll;
+
+  svg {
+    // margin-top: -90px;
+  }
+}

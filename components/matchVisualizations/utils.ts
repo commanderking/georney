@@ -672,3 +672,36 @@ export const getSankeyData = (activityMap: { [key: string]: Activity[] }) => {
   };
   return data;
 };
+
+export const formatCalendarActivities = (
+  activities: Activity[],
+  activityFilter: (activity: Activity) => boolean = () => true
+) => {
+  const flattened = activities.map((activity) => {
+    const values = Object.values(activity);
+    return _.flatten(values);
+  });
+
+  const allActivities = _.flatten(flattened)
+    .filter(activityFilter)
+    .map((activity) => {
+      console.log("activity", activity);
+      return {
+        ...activity,
+        date: moment(activity.timestamp).format("YYYY-MM-DD"),
+      };
+    });
+
+  const rawActivitiesByDate = _.groupBy(allActivities, "date");
+
+  console.log("rawActivitiesByDate", rawActivitiesByDate);
+  return _.map(rawActivitiesByDate, (activities, key, value) => {
+    // console.log("key", key);
+    // console.log("value", value);
+    // console.log("activites", activities);
+    return {
+      day: key,
+      value: activities.length,
+    };
+  });
+};
