@@ -693,7 +693,6 @@ export const formatCalendarActivities = (
 
   const rawActivitiesByDate = _.groupBy(allActivities, "date");
 
-  console.log("rawActivitiesByDate", rawActivitiesByDate);
   return _.map(rawActivitiesByDate, (activities, key) => {
     return {
       day: key,
