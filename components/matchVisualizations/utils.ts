@@ -685,7 +685,6 @@ export const formatCalendarActivities = (
   const allActivities = _.flatten(flattened)
     .filter(activityFilter)
     .map((activity) => {
-      console.log("activity", activity);
       return {
         ...activity,
         date: moment(activity.timestamp).format("YYYY-MM-DD"),
@@ -695,10 +694,7 @@ export const formatCalendarActivities = (
   const rawActivitiesByDate = _.groupBy(allActivities, "date");
 
   console.log("rawActivitiesByDate", rawActivitiesByDate);
-  return _.map(rawActivitiesByDate, (activities, key, value) => {
-    // console.log("key", key);
-    // console.log("value", value);
-    // console.log("activites", activities);
+  return _.map(rawActivitiesByDate, (activities, key) => {
     return {
       day: key,
       value: activities.length,

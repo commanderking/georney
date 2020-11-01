@@ -55,7 +55,7 @@ export default function Home() {
         <div className={styles.examples} id="examples" ref={examplesRef}>
           <h3>Flow Chart (Sankey)</h3>
           <Sankey activityMap={activityMap} />
-          <div>
+          <div className={styles.calendarWrapper}>
             <h3>Calendar Heat Map</h3>
             <Calendar activities={activities} />
           </div>
