@@ -13,6 +13,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  max-width: 100%;
 }
 
 .splash {
@@ -104,6 +105,10 @@
     decoration: none;
     color: inherit;
   }
+}
+
+.exampleWrapper {
+  min-height: 90vh;
 }
 
 .card {
