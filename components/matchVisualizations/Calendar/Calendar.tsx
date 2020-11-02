@@ -5,15 +5,18 @@ import styles from "./styles.module.scss";
 
 type Props = {
   activities: any;
+  activityFilter?: (activity: any) => boolean;
 };
 
-const Calendar = ({ activities }: Props) => {
+const Calendar = ({ activities, activityFilter }: Props) => {
   // TODO: Update with dates - hardcode for now
   const startDate = "2019-06-01";
   const endDate = "2020-10-05";
 
   const filterOutChats = (activity) => activity.type !== "chats";
-  const formatted = formatCalendarActivities(activities, filterOutChats);
+  const formatted = activityFilter
+    ? formatCalendarActivities(activities, activityFilter)
+    : formatCalendarActivities(activities);
   return (
     <div className={styles.wrapper}>
       <div className={styles.svgWrapper}>

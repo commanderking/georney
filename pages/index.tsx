@@ -4,6 +4,7 @@ import MatchesDropZone from "components/matchesDropZone/MatchesDropZone";
 import { useRef } from "react";
 import Sankey from "components/matchVisualizations/Sankey/Sankey";
 import Calendar from "components/matchVisualizations/Calendar/Calendar";
+import CalendarWithFilters from "components/matchVisualizations/Calendar/CalendarWithFilters";
 import activities from "data/matches.json";
 import { getActivitiesByMatchType } from "components/matchVisualizations/utils";
 
@@ -57,9 +58,10 @@ export default function Home() {
             <h3>Flow Chart (Sankey)</h3>
             <Sankey activityMap={activityMap} />
           </div>
+
           <div className={styles.exampleWrapper}>
-            <h3>Calendar Heat Map</h3>
-            <Calendar activities={activities} />
+            <h3>Monthly Activity</h3>
+            <CalendarWithFilters activities={activities} />
           </div>
         </div>
         {/* <div className={styles.grid}>

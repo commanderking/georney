@@ -9,8 +9,11 @@
     "export": "next export"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "@nivo/calendar": "^0.63.1",
     "@nivo/sankey": "^0.63.1",
+    "@types/material-ui": "^0.21.8",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "next": "10.0.0",
