@@ -29,11 +29,17 @@ const filters = {
   MET: (activity: any) => activity.type === "we_met",
 };
 
+const colors = {
+  LIKES: ["#ffe6ea", "	#ffb3bf", "#ff8095", "#ff4d6a", "#ff002b"],
+  MATCHES: ["#D7FFB0", "#AADD77", "#7FB747", "#599022", "#3A6A09"],
+  MESSAGES: ["#e6b3ff", "#cc66ff", "#b31aff", "#8800cc", "#660099", "#440066"],
+  MET: ["#D7FFB0", "#AADD77", "#7FB747", "#599022", "#3A6A09"],
+};
+
 const CalendarWithFilters = ({ activities }: Props) => {
   const [activityType, setActivityType] = useState(activityTypes.LIKES);
 
   const handleActivityTypeChange = (event, newActivityType) => {
-    console.log("newActivityType", newActivityType);
     setActivityType(newActivityType);
 
     if (newActivityType === null) {
@@ -56,6 +62,7 @@ const CalendarWithFilters = ({ activities }: Props) => {
       <Calendar
         activities={activities}
         activityFilter={filters[activityType]}
+        colors={colors[activityType]}
       />
     </div>
   );

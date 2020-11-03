@@ -6,14 +6,18 @@ import styles from "./styles.module.scss";
 type Props = {
   activities: any;
   activityFilter?: (activity: any) => boolean;
+  colors: string[];
 };
 
-const Calendar = ({ activities, activityFilter }: Props) => {
+const Calendar = ({
+  activities,
+  activityFilter,
+  colors = ["#D7FFB0", "#AADD77", "#7FB747", "#599022", "#3A6A09"],
+}: Props) => {
   // TODO: Update with dates - hardcode for now
   const startDate = "2019-06-01";
   const endDate = "2020-10-05";
 
-  const filterOutChats = (activity) => activity.type !== "chats";
   const formatted = activityFilter
     ? formatCalendarActivities(activities, activityFilter)
     : formatCalendarActivities(activities);
@@ -27,14 +31,7 @@ const Calendar = ({ activities, activityFilter }: Props) => {
           from={startDate}
           to={endDate}
           yearSpacing={100}
-          colors={[
-            "#EAFFD6",
-            "#D7FFB0",
-            "#AADD77",
-            "#7FB747",
-            "#599022",
-            "#3A6A09",
-          ]}
+          colors={colors}
           monthSpacing={35}
           align="left"
           margin={{
