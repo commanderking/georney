@@ -14,7 +14,11 @@ const activityTypes = {
   MET: "MET" as const,
 };
 
-const filters = {
+type CalendarActivityTypes = keyof typeof activityTypes;
+
+const filters: {
+  [key in CalendarActivityTypes]: (activity: any) => boolean;
+} = {
   LIKES: (activity: any) => {
     return (
       activity.type === "like" ||
@@ -29,8 +33,8 @@ const filters = {
   MET: (activity: any) => activity.type === "we_met",
 };
 
-const colors = {
-  LIKES: ["#ffe6ea", "	#ffb3bf", "#ff8095", "#ff4d6a", "#ff002b"],
+const colors: { [key in CalendarActivityTypes]: string[] } = {
+  LIKES: ["#ffe6ea", "#ffb3bf", "#ff8095", "#ff4d6a", "#ff002b"],
   MATCHES: ["#D7FFB0", "#AADD77", "#7FB747", "#599022", "#3A6A09"],
   MESSAGES: ["#e6b3ff", "#cc66ff", "#b31aff", "#8800cc", "#660099", "#440066"],
   MET: ["#D7FFB0", "#AADD77", "#7FB747", "#599022", "#3A6A09"],

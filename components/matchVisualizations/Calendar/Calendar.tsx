@@ -21,6 +21,7 @@ const Calendar = ({
   const formatted = activityFilter
     ? formatCalendarActivities(activities, activityFilter)
     : formatCalendarActivities(activities);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.svgWrapper}>
