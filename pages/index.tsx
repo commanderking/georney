@@ -1,15 +1,17 @@
+import { useContext } from "react";
 import Head from "next/head";
 import styles from "../styles/Home.module.scss";
 import MatchesDropZone from "components/matchesDropZone/MatchesDropZone";
 import { useRef } from "react";
 import Sankey from "components/matchVisualizations/Sankey/Sankey";
-import Calendar from "components/matchVisualizations/Calendar/Calendar";
 import CalendarWithFilters from "components/matchVisualizations/Calendar/CalendarWithFilters";
 import activities from "data/matches.json";
 import { getActivitiesByMatchType } from "components/matchVisualizations/utils";
+import { UserMatchesContext } from "context/UserMatchesProvider";
 
 export default function Home() {
   const examplesRef = useRef(null);
+  const { data, setData } = useContext(UserMatchesContext);
 
   // @ts-ignore
   const activityMap = getActivitiesByMatchType(activities);
@@ -25,7 +27,7 @@ export default function Home() {
           <h1 className={styles.title}>Visualize Your Hinge Data</h1>
 
           {/* <p className={styles.description}>Democratizing Dating Data</p> */}
-          <MatchesDropZone />
+          <MatchesDropZone onDrop={(json) => {}} />
           <small className={styles.dropZoneText}>
             File is NOT uploaded to or saved on server. Verify{" "}
             <a href="https://github.com/commanderking/georney" target="_blank">
