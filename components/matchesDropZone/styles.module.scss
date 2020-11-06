@@ -11,6 +11,20 @@
   margin-top: 3rem;
 }
 
+.buttonWrapper {
+  padding: 10px 50px;
+  border-radius: 5px;
+  margin: 5px;
+  width: 80%;
+  min-width: 300px;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.button {
+  padding: 1em;
+}
+
 .wrapper:hover {
   background-color: lightpink;
   border: 1px solid black;
