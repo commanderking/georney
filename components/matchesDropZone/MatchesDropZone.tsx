@@ -8,7 +8,7 @@ type Props = {
   onDrop: (json: any) => void;
 };
 
-const MatchesDropZone = ({ onDrop }: Props) => {
+const MatchesDropZone = () => {
   const { data, setData } = useContext(UserMatchesContext);
 
   const handleDrop = (acceptedFiles) => {
@@ -17,7 +17,6 @@ const MatchesDropZone = ({ onDrop }: Props) => {
     reader.onload = () => {
       if (typeof reader.result === "string") {
         const json = JSON.parse(reader.result);
-        console.log("json", json);
         // @ts-ignore
         setData(json);
       }
@@ -33,8 +32,6 @@ const MatchesDropZone = ({ onDrop }: Props) => {
     accept: ".json",
     multiple: false,
   });
-
-  console.log("data", data);
 
   const getContent = () => {
     if (isDragActive) {
