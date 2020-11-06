@@ -27,7 +27,7 @@ export default function Home() {
           <h1 className={styles.title}>Visualize Your Hinge Data</h1>
 
           {/* <p className={styles.description}>Democratizing Dating Data</p> */}
-          <MatchesDropZone onDrop={(json) => {}} />
+          <MatchesDropZone />
           <small className={styles.dropZoneText}>
             File is NOT uploaded to or saved on server. Verify{" "}
             <a href="https://github.com/commanderking/georney" target="_blank">
