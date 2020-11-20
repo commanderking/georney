@@ -23,8 +23,6 @@ const Calendar = ({ data, width = 500 }: Props) => {
 
   const [firstDate, lastDate] = getDateRange(data);
 
-  console.log("first", firstDate);
-
   // firstMonthDate turns to 04-30 if we have 05-01. Why does new Date work that way? Figure it out
   const firstMonthDate = new Date(firstDate);
   const firstMonth = new Date(firstDate).getMonth();
