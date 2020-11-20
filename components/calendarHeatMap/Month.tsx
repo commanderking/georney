@@ -1,5 +1,4 @@
 import React from "react";
-import _ from "lodash";
 import {
   timeDay,
   timeDays,
@@ -12,14 +11,10 @@ import {
 } from "d3-time";
 
 import { getDaysInMonth } from "./utils";
+import { monthsFullName } from "./constants";
 
-const Calendar = ({ data }) => {
-  const dataPerDay = _.keyBy(data, "day");
-  const dimension = 20;
-
-  //November
-  const month = 10;
-  const year = 2020;
+const Calendar = ({ data, year, month }) => {
+  const dimension = 18;
 
   const earliestDate = new Date(year, month, 1);
   // needs to be first day of next month for timeDay.range (last date is not inclusive)
@@ -28,18 +23,28 @@ const Calendar = ({ data }) => {
   // TODO - need one more date than latest to include last day in the month
   const dates = timeDay.range(earliestDate, latestDate);
 
-  const days = getDaysInMonth(dates, dataPerDay, dimension);
+  const days = getDaysInMonth(dates, data, dimension);
+
+  const width = dimension * 7 + 20;
+
+  const maxWeeksPerMonth = 5;
+  const height = dimension * maxWeeksPerMonth + 50;
+
+  const textHeight = 12;
+  const titleHeight = 20;
 
   return (
-    <svg width={dimension * 7 + 1} height={500}>
-      <g>
+    <svg width={width} height={height}>
+      <text y={textHeight}>{monthsFullName[month]}</text>
+
+      <g y={textHeight}>
         {days.map((day) => {
           return (
             <rect
               key={day.id}
               fill={day.color}
               x={day.x}
-              y={day.y}
+              y={titleHeight + day.y}
               width={dimension}
               height={dimension}
               stroke="gray"
