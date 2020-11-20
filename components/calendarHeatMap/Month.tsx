@@ -11,9 +11,10 @@ import {
 } from "d3-time";
 
 import { getDaysInMonth } from "./utils";
+import { monthsFullName } from "./constants";
 
 const Calendar = ({ data, year, month }) => {
-  const dimension = 20;
+  const dimension = 18;
 
   const earliestDate = new Date(year, month, 1);
   // needs to be first day of next month for timeDay.range (last date is not inclusive)
@@ -29,16 +30,21 @@ const Calendar = ({ data, year, month }) => {
   const maxWeeksPerMonth = 5;
   const height = dimension * maxWeeksPerMonth + 50;
 
+  const textHeight = 12;
+  const titleHeight = 20;
+
   return (
     <svg width={width} height={height}>
-      <g>
+      <text y={textHeight}>{monthsFullName[month]}</text>
+
+      <g y={textHeight}>
         {days.map((day) => {
           return (
             <rect
               key={day.id}
               fill={day.color}
               x={day.x}
-              y={day.y}
+              y={titleHeight + day.y}
               width={dimension}
               height={dimension}
               stroke="gray"

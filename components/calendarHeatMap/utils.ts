@@ -1,11 +1,7 @@
 import { timeWeek, timeMonth } from "d3-time";
 import _ from "lodash";
 import moment from "moment";
-
-type RawData = {
-  date: string;
-  value: number;
-};
+import { CalendarData } from "./types";
 
 export const getDaysInMonth = (dates: Date[], dataByDay, dimension: number) => {
   const earliestDate = timeMonth.ceil(dates[0]);
@@ -23,7 +19,7 @@ export const getDaysInMonth = (dates: Date[], dataByDay, dimension: number) => {
   });
 };
 
-export const getDateRange = (data: RawData[]) => {
+export const getDateRange = (data: CalendarData[]) => {
   const dateStrings = data.map((datum) => datum.date).sort();
 
   return [_.first(dateStrings), _.last(dateStrings)];

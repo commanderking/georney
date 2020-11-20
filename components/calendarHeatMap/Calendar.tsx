@@ -11,16 +11,21 @@ import {
   timeSaturday,
 } from "d3-time";
 import { getDateRange } from "./utils";
+import { CalendarData } from "./types";
 
-const Calendar = ({ data }) => {
-  const year = 2020;
-  const month = 10;
+type Props = {
+  data: CalendarData[];
+  width?: number;
+};
+
+const Calendar = ({ data, width = 500 }: Props) => {
   const dataPerDay = _.keyBy(data, "date");
 
   const [firstDate, lastDate] = getDateRange(data);
 
   console.log("first", firstDate);
 
+  // firstMonthDate turns to 04-30 if we have 05-01. Why does new Date work that way? Figure it out
   const firstMonthDate = new Date(firstDate);
   const firstMonth = new Date(firstDate).getMonth();
   const firstYear = new Date(firstDate).getFullYear();
@@ -28,22 +33,22 @@ const Calendar = ({ data }) => {
   const lastMonth = new Date(lastDate).getMonth();
   const lastYear = new Date(lastDate).getFullYear();
 
-  console.log("firstMonth", firstMonth);
   const monthsInYear = timeMonths(
-    new Date(firstYear, firstMonth + 1, 1),
+    new Date(firstYear, firstMonth, 1),
     new Date(lastYear, lastMonth + 1, 1)
   );
-  console.log("monthsInYear", monthsInYear);
-
   const monthDates = monthsInYear.map((firstDayInMonth) => ({
     month: firstDayInMonth.getMonth(),
     year: firstDayInMonth.getFullYear(),
   }));
 
-  console.log("monthDates", monthDates);
-  return monthDates.map((month) => (
-    <Month data={dataPerDay} year={month.year} month={month.month} />
-  ));
+  return (
+    <div style={{ width }}>
+      {monthDates.map((month) => (
+        <Month data={dataPerDay} year={month.year} month={month.month} />
+      ))}
+    </div>
+  );
 };
 
 export default Calendar;
