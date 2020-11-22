@@ -18,15 +18,30 @@ type Props = {
   width?: number;
 };
 
-const getMonthsInYear = (
-  year: number,
-  firstMonth?: number,
-  lastMonth?: number
-) => {
+const getTimeMonths = (year: number, firstMonth: number, lastMonth: number) => {
   return timeMonths(
-    new Date(year, firstMonth || 0, 1),
-    new Date(year, lastMonth ? lastMonth + 1 : 12, 1)
+    new Date(year, firstMonth, 1),
+    new Date(year, lastMonth + 1, 1)
   );
+};
+
+const getMonthsInYear = (years, firstMonth, lastMonth) => (year, index) => {
+  let monthsInYears = getTimeMonths(year, 0, 11);
+  if (years.length === 1) {
+    monthsInYears = getTimeMonths(year, firstMonth, lastMonth);
+  }
+  if (index === 0) {
+    monthsInYears = getTimeMonths(year, firstMonth, 11);
+  }
+
+  if (year === _.last(years)) {
+    monthsInYears = getTimeMonths(year, 0, lastMonth);
+  }
+
+  return monthsInYears.map((firstDayInMonth) => ({
+    month: firstDayInMonth.getMonth(),
+    year,
+  }));
 };
 
 const Calendar = ({ data, width = 500 }: Props) => {
@@ -44,37 +59,24 @@ const Calendar = ({ data, width = 500 }: Props) => {
 
   // Add one, because not inclusive of final year
   const years = _.range(firstYear, lastYear + 1);
-  console.log("years", years);
 
-  const yearsWithMonths = years.map((year, index) => {
-    let monthsInYears = getMonthsInYear(year);
-    if (years.length === 1) {
-      monthsInYears = getMonthsInYear(year, firstMonth, lastMonth);
-    }
-    if (index === 0) {
-      monthsInYears = getMonthsInYear(year, firstMonth);
-    }
-
-    if (year === _.last(years)) {
-      monthsInYears = getMonthsInYear(year, 0, lastMonth);
-    }
-
-    return monthsInYears.map((firstDayInMonth) => ({
-      month: firstDayInMonth.getMonth(),
-      year: firstDayInMonth.getFullYear(),
-    }));
-  });
-
-  console.log("yearsWithMonths", yearsWithMonths);
+  const monthsAvailablePerYear = years.map(
+    getMonthsInYear(years, firstMonth, lastMonth)
+  );
 
   return (
     <div style={{ width }}>
-      {yearsWithMonths.map((months) => {
+      {monthsAvailablePerYear.map((months) => {
         return (
-          <div>
+          <div key={`Year0${months[0].year}`}>
             <h3>{months[0].year}</h3>
             {months.map((month, index) => (
-              <Month data={dataPerDay} year={month.year} month={month.month} />
+              <Month
+                key={`Month-${month.month}`}
+                data={dataPerDay}
+                year={month.year}
+                month={month.month}
+              />
             ))}
           </div>
         );
