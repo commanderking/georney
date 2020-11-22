@@ -7,7 +7,7 @@ import {
   timeWeeks,
   timeMonths,
   timeMonth,
-  timeYear,
+  timeYears,
   timeSaturday,
 } from "d3-time";
 import { getDateRange } from "./utils";
@@ -16,6 +16,32 @@ import { CalendarData } from "./types";
 type Props = {
   data: CalendarData[];
   width?: number;
+};
+
+const getTimeMonths = (year: number, firstMonth: number, lastMonth: number) => {
+  return timeMonths(
+    new Date(year, firstMonth, 1),
+    new Date(year, lastMonth + 1, 1)
+  );
+};
+
+const getMonthsInYear = (years, firstMonth, lastMonth) => (year, index) => {
+  let monthsInYears = getTimeMonths(year, 0, 11);
+  if (years.length === 1) {
+    monthsInYears = getTimeMonths(year, firstMonth, lastMonth);
+  }
+  if (index === 0) {
+    monthsInYears = getTimeMonths(year, firstMonth, 11);
+  }
+
+  if (year === _.last(years)) {
+    monthsInYears = getTimeMonths(year, 0, lastMonth);
+  }
+
+  return monthsInYears.map((firstDayInMonth) => ({
+    month: firstDayInMonth.getMonth(),
+    year,
+  }));
 };
 
 const Calendar = ({ data, width = 500 }: Props) => {
@@ -31,20 +57,30 @@ const Calendar = ({ data, width = 500 }: Props) => {
   const lastMonth = new Date(lastDate).getMonth();
   const lastYear = new Date(lastDate).getFullYear();
 
-  const monthsInYear = timeMonths(
-    new Date(firstYear, firstMonth, 1),
-    new Date(lastYear, lastMonth + 1, 1)
+  // Add one, because not inclusive of final year
+  const years = _.range(firstYear, lastYear + 1);
+
+  const monthsAvailablePerYear = years.map(
+    getMonthsInYear(years, firstMonth, lastMonth)
   );
-  const monthDates = monthsInYear.map((firstDayInMonth) => ({
-    month: firstDayInMonth.getMonth(),
-    year: firstDayInMonth.getFullYear(),
-  }));
 
   return (
     <div style={{ width }}>
-      {monthDates.map((month) => (
-        <Month data={dataPerDay} year={month.year} month={month.month} />
-      ))}
+      {monthsAvailablePerYear.map((months) => {
+        return (
+          <div key={`Year0${months[0].year}`}>
+            <h3>{months[0].year}</h3>
+            {months.map((month, index) => (
+              <Month
+                key={`Month-${month.month}`}
+                data={dataPerDay}
+                year={month.year}
+                month={month.month}
+              />
+            ))}
+          </div>
+        );
+      })}
     </div>
   );
 };
