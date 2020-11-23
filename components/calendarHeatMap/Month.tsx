@@ -13,7 +13,7 @@ import {
 import { getDaysInMonth } from "./utils";
 import { monthsFullName } from "./constants";
 
-const Calendar = ({ data, year, month }) => {
+const Calendar = ({ data, year, month, getColor }) => {
   const dimension = 18;
 
   const earliestDate = new Date(year, month, 1);
@@ -23,7 +23,7 @@ const Calendar = ({ data, year, month }) => {
   // TODO - need one more date than latest to include last day in the month
   const dates = timeDay.range(earliestDate, latestDate);
 
-  const days = getDaysInMonth(dates, data, dimension);
+  const days = getDaysInMonth(dates, data, dimension, getColor);
 
   const width = dimension * 7 + 20;
 

@@ -10,7 +10,7 @@ import {
   timeYears,
   timeSaturday,
 } from "d3-time";
-import { getDateRange } from "./utils";
+import { getDateRange, getColorScale } from "./utils";
 import { CalendarData } from "./types";
 
 type Props = {
@@ -64,6 +64,8 @@ const Calendar = ({ data, width = 500 }: Props) => {
     getMonthsInYear(years, firstMonth, lastMonth)
   );
 
+  const getColor = getColorScale(data);
+
   return (
     <div style={{ width }}>
       {monthsAvailablePerYear.map((months) => {
@@ -76,6 +78,7 @@ const Calendar = ({ data, width = 500 }: Props) => {
                 data={dataPerDay}
                 year={month.year}
                 month={month.month}
+                getColor={getColor}
               />
             ))}
           </div>
