@@ -1,7 +1,6 @@
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import Calendar from "./Calendar";
 import React, { useState } from "react";
-import { formatCalendarActivities } from "./utils";
 const activityTypes = {
   LIKES: "LIKES" as const,
   MATCHES: "MATCHES" as const,

@@ -9,7 +9,7 @@ import { RawActivity } from "components/matchVisualizations/types";
 type Props = {
   activities: RawActivity[];
   activityFilter?: (activity: any) => boolean;
-  width?: number;
+  width?: number | string;
 };
 
 const Calendar = ({
@@ -18,12 +18,13 @@ const Calendar = ({
   width = 500,
 }: Props) => {
   const activityDates = formatCalendarActivities(activities, activityFilter);
-  const dataPerDay = _.keyBy(activityDates, "date");
 
   // For consistent months to display across filters, use all activities to create months and years
   const allActivities = formatCalendarActivities(activities);
   const years = getYearsWithMonthlyValues(allActivities);
   const getColor = getColorScale(activityDates);
+
+  const dailyActivity = _.keyBy(activityDates, "date");
 
   return (
     <div style={{ width }}>
@@ -34,7 +35,7 @@ const Calendar = ({
             {year.map((monthData) => (
               <Month
                 key={`Month-${monthData.month}`}
-                data={dataPerDay}
+                data={dailyActivity}
                 year={monthData.year}
                 month={monthData.month}
                 getColor={getColor}
