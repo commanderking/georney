@@ -8,13 +8,21 @@ import {
 import { RawActivity } from "components/matchVisualizations/types";
 type Props = {
   activities: RawActivity[];
+  activityFilter?: (activity: any) => boolean;
   width?: number;
 };
 
-const Calendar = ({ activities, width = 500 }: Props) => {
-  const activityDates = formatCalendarActivities(activities);
+const Calendar = ({
+  activities,
+  activityFilter = () => true,
+  width = 500,
+}: Props) => {
+  const activityDates = formatCalendarActivities(activities, activityFilter);
   const dataPerDay = _.keyBy(activityDates, "date");
-  const years = getYearsWithMonthlyValues(activityDates);
+
+  // For consistent months to display across filters, use all activities to create months and years
+  const allActivities = formatCalendarActivities(activities);
+  const years = getYearsWithMonthlyValues(allActivities);
   const getColor = getColorScale(activityDates);
 
   return (
