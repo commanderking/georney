@@ -1,31 +1,24 @@
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import Calendar from "./Calendar";
 import React, { useState } from "react";
-
-const activityTypes = {
-  ALL_LIKES: "ALL_LIKES",
-  LIKES_SENT: "LIKES_SENT",
-  LIKES_RECEIVED: "LIKES_RECEIVED",
-  MATCHES: "MATCHES",
-  MESSAGES: "MESSAGES",
-  MET: "MET",
-};
-
-type CalendarActivityTypes = keyof typeof activityTypes;
+import {
+  activityTypes,
+  matchTypes,
+} from "components/matchVisualizations/calendarHeatMap/constants";
+import { CalendarActivityTypes } from "components/matchVisualizations/calendarHeatMap/types";
 
 const filters: {
   [key in CalendarActivityTypes]: (activity: any) => boolean;
 } = {
-  // This duplicates some data right now, namely like/match
   ALL_LIKES: (activity: any) =>
     activity.type === "like" ||
-    activity.match_type === "match_from_received_like" ||
+    activity.match_type === matchTypes.match_from_received_like ||
     activity.type === "block",
   LIKES_SENT: (activity: any) => {
     return activity.type === "like";
   },
   LIKES_RECEIVED: (activity: any) =>
-    activity.match_type === "match_from_received_like" ||
+    activity.match_type === matchTypes.match_from_received_like ||
     activity.type === "block",
   MATCHES: (activity: any) => {
     return activity.type === "match";
