@@ -5,6 +5,8 @@ import _ from "lodash";
 import moment from "moment";
 import { DailyActivity } from "./types";
 import { isMatchFromReceivedLike } from "components/matchVisualizations/utils";
+import { RawActivity } from "components/matchVisualizations/types";
+
 export const getDaysInMonth = (
   dates: Date[],
   dataByDay,
@@ -100,7 +102,7 @@ export const getColorScale = (
   return scaleLinear().domain(domain).range([0.25, 0.75]);
 };
 
-const appendMetadata = (activity: any) => {
+const appendMetadata = (activity: RawActivity) => {
   if (isMatchFromReceivedLike(activity)) {
     return {
       ...activity,
@@ -118,12 +120,11 @@ const appendMetadata = (activity: any) => {
 
 export const formatCalendarActivities = (
   activities: any = [],
-  activityFilter: (activity: any) => boolean = () => true
+  activityFilter: (activity: RawActivity) => boolean = () => true
 ): DailyActivity[] => {
   const activitiesWithMetadata = activities.map(appendMetadata);
   const flattened = activitiesWithMetadata.map((activity) => {
     const values = Object.values(activity);
-    // console.log("values", values);
     return _.flatten(values);
   });
 
