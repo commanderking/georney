@@ -3,9 +3,10 @@ import { scaleLinear } from "d3-scale";
 import { interpolatePurples } from "d3-scale-chromatic";
 import _ from "lodash";
 import moment from "moment";
-import { DailyActivity } from "./types";
+import { DailyActivity, ActivityCommon } from "./types";
 import { isMatchFromReceivedLike } from "components/matchVisualizations/utils";
 import { RawActivity } from "components/matchVisualizations/types";
+import { matchTypes } from "components/matchVisualizations/calendarHeatMap/constants";
 
 export const getDaysInMonth = (
   dates: Date[],
@@ -109,7 +110,7 @@ const appendMetadata = (activity: RawActivity) => {
       match: [
         {
           ...activity.match[0],
-          match_type: "match_from_received_like",
+          match_type: matchTypes.match_from_received_like,
         },
       ],
     };
@@ -119,7 +120,7 @@ const appendMetadata = (activity: RawActivity) => {
 };
 
 export const formatCalendarActivities = (
-  activities: any = [],
+  activities: RawActivity[] = [],
   activityFilter: (activity: RawActivity) => boolean = () => true
 ): DailyActivity[] => {
   const activitiesWithMetadata = activities.map(appendMetadata);

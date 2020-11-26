@@ -5,26 +5,29 @@ import {
   activityTypes,
   matchTypes,
 } from "components/matchVisualizations/calendarHeatMap/constants";
-import { CalendarActivityTypes } from "components/matchVisualizations/calendarHeatMap/types";
+import {
+  CalendarActivityTypes,
+  ActivityCommon,
+} from "components/matchVisualizations/calendarHeatMap/types";
+
+const isReceivedLike = (activity: ActivityCommon) =>
+  activity.match_type === matchTypes.match_from_received_like ||
+  activity.type === "block";
 
 const filters: {
-  [key in CalendarActivityTypes]: (activity: any) => boolean;
+  [key in CalendarActivityTypes]: (activity: ActivityCommon) => boolean;
 } = {
-  ALL_LIKES: (activity: any) =>
-    activity.type === "like" ||
-    activity.match_type === matchTypes.match_from_received_like ||
-    activity.type === "block",
-  LIKES_SENT: (activity: any) => {
+  ALL_LIKES: (activity: ActivityCommon) =>
+    activity.type === "like" || isReceivedLike(activity),
+  LIKES_SENT: (activity: ActivityCommon) => {
     return activity.type === "like";
   },
-  LIKES_RECEIVED: (activity: any) =>
-    activity.match_type === matchTypes.match_from_received_like ||
-    activity.type === "block",
-  MATCHES: (activity: any) => {
+  LIKES_RECEIVED: (activity: ActivityCommon) => isReceivedLike(activity),
+  MATCHES: (activity: ActivityCommon) => {
     return activity.type === "match";
   },
-  MESSAGES: (activity: any) => activity.type === "chats",
-  MET: (activity: any) => activity.type === "we_met",
+  MESSAGES: (activity: ActivityCommon) => activity.type === "chats",
+  MET: (activity: ActivityCommon) => activity.type === "we_met",
 };
 
 type Props = {

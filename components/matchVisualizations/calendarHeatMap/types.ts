@@ -1,4 +1,13 @@
-import { activityTypes } from "components/matchVisualizations/calendarHeatMap/constants";
+import {
+  activityTypes,
+  matchTypes,
+} from "components/matchVisualizations/calendarHeatMap/constants";
+
+export type ActivityCommon = {
+  timestamp: string;
+  type: string;
+  match_type?: "match_from_received_like";
+};
 
 export type DailyActivity = {
   date: string;
