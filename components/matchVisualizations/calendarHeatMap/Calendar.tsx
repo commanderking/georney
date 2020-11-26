@@ -19,6 +19,7 @@ const Calendar = ({
 }: Props) => {
   const activityDates = formatCalendarActivities(activities, activityFilter);
 
+  console.log("activityDates", activityDates);
   // For consistent months to display across filters, use all activities to create months and years
   const allActivities = formatCalendarActivities(activities);
   const years = getYearsWithMonthlyValues(allActivities);

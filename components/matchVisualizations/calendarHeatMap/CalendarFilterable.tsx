@@ -3,8 +3,9 @@ import Calendar from "./Calendar";
 import React, { useState } from "react";
 
 const activityTypes = {
-  ALL_ACTIVITY: "ALL_ACTIVITY",
+  ALL_LIKES: "ALL_LIKES",
   LIKES_SENT: "LIKES_SENT",
+  LIKES_RECEIVED: "LIKES_RECEIVED",
   MATCHES: "MATCHES",
   MESSAGES: "MESSAGES",
   MET: "MET",
@@ -16,13 +17,16 @@ const filters: {
   [key in CalendarActivityTypes]: (activity: any) => boolean;
 } = {
   // This duplicates some data right now, namely like/match
-  ALL_ACTIVITY: (activity: any) =>
+  ALL_LIKES: (activity: any) =>
     activity.type === "like" ||
-    activity.type === "match" ||
+    activity.match_type === "match_from_received_like" ||
     activity.type === "block",
   LIKES_SENT: (activity: any) => {
     return activity.type === "like";
   },
+  LIKES_RECEIVED: (activity: any) =>
+    activity.match_type === "match_from_received_like" ||
+    activity.type === "block",
   MATCHES: (activity: any) => {
     return activity.type === "match";
   },
@@ -36,15 +40,16 @@ type Props = {
 };
 
 const CalendarFilterable = ({ activities, width = 500 }: Props) => {
-  const [activityType, setActivityType] = useState(activityTypes.ALL_ACTIVITY);
+  const [activityType, setActivityType] = useState(activityTypes.ALL_LIKES);
 
   const handleActivityTypeChange = (event, newActivityType) => {
     setActivityType(newActivityType);
 
     if (newActivityType === null) {
-      setActivityType(activityTypes.ALL_ACTIVITY);
+      setActivityType(activityTypes.ALL_LIKES);
     }
   };
+
   return (
     <div>
       <ToggleButtonGroup
@@ -53,10 +58,12 @@ const CalendarFilterable = ({ activities, width = 500 }: Props) => {
         onChange={handleActivityTypeChange}
         size={"small"}
       >
-        <ToggleButton value={activityTypes.ALL_ACTIVITY}>
-          All Activity
+        <ToggleButton value={activityTypes.ALL_LIKES}>All Likes</ToggleButton>
+        <ToggleButton value={activityTypes.LIKES_SENT}>Sent</ToggleButton>
+        <ToggleButton value={activityTypes.LIKES_RECEIVED}>
+          Received
         </ToggleButton>
-        <ToggleButton value={activityTypes.LIKES_SENT}>Likes</ToggleButton>
+
         <ToggleButton value={activityTypes.MATCHES}>Matches</ToggleButton>
         <ToggleButton value={activityTypes.MESSAGES}>Messages</ToggleButton>
         <ToggleButton value={activityTypes.MET}>First Dates</ToggleButton>

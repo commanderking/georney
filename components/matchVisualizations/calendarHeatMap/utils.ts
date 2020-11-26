@@ -4,7 +4,7 @@ import { interpolatePurples } from "d3-scale-chromatic";
 import _ from "lodash";
 import moment from "moment";
 import { CalendarData } from "./types";
-
+import { isMatchFromReceivedLike } from "components/matchVisualizations/utils";
 export const getDaysInMonth = (
   dates: Date[],
   dataByDay,
@@ -96,12 +96,30 @@ export const getColorScale = (
   return scaleLinear().domain(domain).range([0.25, 0.75]);
 };
 
+const appendMetadata = (activity: any) => {
+  if (isMatchFromReceivedLike(activity)) {
+    return {
+      ...activity,
+      match: [
+        {
+          ...activity.match[0],
+          match_type: "match_from_received_like",
+        },
+      ],
+    };
+  }
+
+  return activity;
+};
+
 export const formatCalendarActivities = (
   activities: any = [],
   activityFilter: (activity: any) => boolean = () => true
 ) => {
-  const flattened = activities.map((activity) => {
+  const activitiesWithMetadata = activities.map(appendMetadata);
+  const flattened = activitiesWithMetadata.map((activity) => {
     const values = Object.values(activity);
+    // console.log("values", values);
     return _.flatten(values);
   });
 
@@ -114,6 +132,12 @@ export const formatCalendarActivities = (
       };
     });
 
+  console.log(
+    "allActivities",
+    allActivities.filter(
+      (activity) => activity.match_type === "match_from_received_like"
+    )
+  );
   const rawActivitiesByDate = _.groupBy(allActivities, "date");
 
   return _.map(rawActivitiesByDate, (activities, key) => {

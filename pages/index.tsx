@@ -60,7 +60,7 @@ export default function Home() {
 
           <div className={styles.exampleWrapper}>
             <h3>Monthly Activity</h3>
-            <CalendarFilterable activities={activities} width={"75vw"} />
+            <CalendarFilterable activities={activities} width={"80vw"} />
           </div>
         </div>
         {/* <div className={styles.grid}>
