@@ -38,7 +38,7 @@ const Calendar = ({ data, year, month, getColor }) => {
       <text y={textHeight}>{monthsFullName[month]}</text>
 
       <g y={textHeight}>
-        {days.map((day) => {
+        {days.map((day, index) => {
           return (
             <rect
               key={day.id}

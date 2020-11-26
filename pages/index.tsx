@@ -1,17 +1,14 @@
-import { useContext } from "react";
 import Head from "next/head";
 import styles from "../styles/Home.module.scss";
 import MatchesDropZone from "components/matchesDropZone/MatchesDropZone";
 import { useRef } from "react";
 import Sankey from "components/matchVisualizations/Sankey/Sankey";
-import CalendarWithFilters from "components/matchVisualizations/Calendar/CalendarWithFilters";
+import CalendarFilterable from "components/matchVisualizations/calendarHeatMap/CalendarFilterable";
 import activities from "data/matches.json";
 import { getActivitiesByMatchType } from "components/matchVisualizations/utils";
-import { UserMatchesContext } from "context/UserMatchesProvider";
 
 export default function Home() {
   const examplesRef = useRef(null);
-  const { data, setData } = useContext(UserMatchesContext);
 
   // @ts-ignore
   const activityMap = getActivitiesByMatchType(activities);
@@ -63,7 +60,7 @@ export default function Home() {
 
           <div className={styles.exampleWrapper}>
             <h3>Monthly Activity</h3>
-            <CalendarWithFilters activities={activities} />
+            <CalendarFilterable activities={activities} width={"75vw"} />
           </div>
         </div>
         {/* <div className={styles.grid}>
