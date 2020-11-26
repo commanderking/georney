@@ -1,11 +1,13 @@
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import Calendar from "./Calendar";
 import React, { useState } from "react";
+
 const activityTypes = {
-  LIKES: "LIKES" as const,
-  MATCHES: "MATCHES" as const,
-  MESSAGES: "MESSAGES" as const,
-  MET: "MET" as const,
+  ALL_ACTIVITY: "ALL_ACTIVITY",
+  LIKES_SENT: "LIKES_SENT",
+  MATCHES: "MATCHES",
+  MESSAGES: "MESSAGES",
+  MET: "MET",
 };
 
 type CalendarActivityTypes = keyof typeof activityTypes;
@@ -13,12 +15,13 @@ type CalendarActivityTypes = keyof typeof activityTypes;
 const filters: {
   [key in CalendarActivityTypes]: (activity: any) => boolean;
 } = {
-  LIKES: (activity: any) => {
-    return (
-      activity.type === "like" ||
-      activity.type === "block" ||
-      activity.type === "match"
-    );
+  // This duplicates some data right now, namely like/match
+  ALL_ACTIVITY: (activity: any) =>
+    activity.type === "like" ||
+    activity.type === "match" ||
+    activity.type === "block",
+  LIKES_SENT: (activity: any) => {
+    return activity.type === "like";
   },
   MATCHES: (activity: any) => {
     return activity.type === "match";
@@ -27,14 +30,19 @@ const filters: {
   MET: (activity: any) => activity.type === "we_met",
 };
 
-const CalendarFilterable = ({ activities, width = 500 }) => {
-  const [activityType, setActivityType] = useState(activityTypes.LIKES);
+type Props = {
+  activities: any;
+  width: number | string;
+};
+
+const CalendarFilterable = ({ activities, width = 500 }: Props) => {
+  const [activityType, setActivityType] = useState(activityTypes.ALL_ACTIVITY);
 
   const handleActivityTypeChange = (event, newActivityType) => {
     setActivityType(newActivityType);
 
     if (newActivityType === null) {
-      setActivityType(activityTypes.LIKES);
+      setActivityType(activityTypes.ALL_ACTIVITY);
     }
   };
   return (
@@ -45,7 +53,10 @@ const CalendarFilterable = ({ activities, width = 500 }) => {
         onChange={handleActivityTypeChange}
         size={"small"}
       >
-        <ToggleButton value={activityTypes.LIKES}>Likes</ToggleButton>
+        <ToggleButton value={activityTypes.ALL_ACTIVITY}>
+          All Activity
+        </ToggleButton>
+        <ToggleButton value={activityTypes.LIKES_SENT}>Likes</ToggleButton>
         <ToggleButton value={activityTypes.MATCHES}>Matches</ToggleButton>
         <ToggleButton value={activityTypes.MESSAGES}>Messages</ToggleButton>
         <ToggleButton value={activityTypes.MET}>First Dates</ToggleButton>
