@@ -27,7 +27,7 @@ const Calendar = ({
   const dailyActivity = _.keyBy(activityDates, "date");
 
   return (
-    <div style={{ width }}>
+    <div style={{ width, margin: "auto" }}>
       {years.map((year) => {
         return (
           <div key={`Year-${year[0].year}`}>
