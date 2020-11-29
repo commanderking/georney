@@ -1,33 +1,33 @@
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import Calendar from "./Calendar";
 import React, { useState } from "react";
+import {
+  activityTypes,
+  matchTypes,
+} from "components/matchVisualizations/calendarHeatMap/constants";
+import {
+  CalendarActivityTypes,
+  ActivityCommon,
+} from "components/matchVisualizations/calendarHeatMap/types";
 
-const activityTypes = {
-  ALL_ACTIVITY: "ALL_ACTIVITY",
-  LIKES_SENT: "LIKES_SENT",
-  MATCHES: "MATCHES",
-  MESSAGES: "MESSAGES",
-  MET: "MET",
-};
-
-type CalendarActivityTypes = keyof typeof activityTypes;
+const isReceivedLike = (activity: ActivityCommon) =>
+  activity.match_type === matchTypes.match_from_received_like ||
+  activity.type === "block";
 
 const filters: {
-  [key in CalendarActivityTypes]: (activity: any) => boolean;
+  [key in CalendarActivityTypes]: (activity: ActivityCommon) => boolean;
 } = {
-  // This duplicates some data right now, namely like/match
-  ALL_ACTIVITY: (activity: any) =>
-    activity.type === "like" ||
-    activity.type === "match" ||
-    activity.type === "block",
-  LIKES_SENT: (activity: any) => {
+  ALL_LIKES: (activity: ActivityCommon) =>
+    activity.type === "like" || isReceivedLike(activity),
+  LIKES_SENT: (activity: ActivityCommon) => {
     return activity.type === "like";
   },
-  MATCHES: (activity: any) => {
+  LIKES_RECEIVED: (activity: ActivityCommon) => isReceivedLike(activity),
+  MATCHES: (activity: ActivityCommon) => {
     return activity.type === "match";
   },
-  MESSAGES: (activity: any) => activity.type === "chats",
-  MET: (activity: any) => activity.type === "we_met",
+  MESSAGES: (activity: ActivityCommon) => activity.type === "chats",
+  MET: (activity: ActivityCommon) => activity.type === "we_met",
 };
 
 type Props = {
@@ -36,15 +36,16 @@ type Props = {
 };
 
 const CalendarFilterable = ({ activities, width = 500 }: Props) => {
-  const [activityType, setActivityType] = useState(activityTypes.ALL_ACTIVITY);
+  const [activityType, setActivityType] = useState(activityTypes.ALL_LIKES);
 
   const handleActivityTypeChange = (event, newActivityType) => {
     setActivityType(newActivityType);
 
     if (newActivityType === null) {
-      setActivityType(activityTypes.ALL_ACTIVITY);
+      setActivityType(activityTypes.ALL_LIKES);
     }
   };
+
   return (
     <div>
       <ToggleButtonGroup
@@ -53,10 +54,12 @@ const CalendarFilterable = ({ activities, width = 500 }: Props) => {
         onChange={handleActivityTypeChange}
         size={"small"}
       >
-        <ToggleButton value={activityTypes.ALL_ACTIVITY}>
-          All Activity
+        <ToggleButton value={activityTypes.ALL_LIKES}>All Likes</ToggleButton>
+        <ToggleButton value={activityTypes.LIKES_SENT}>Sent</ToggleButton>
+        <ToggleButton value={activityTypes.LIKES_RECEIVED}>
+          Received
         </ToggleButton>
-        <ToggleButton value={activityTypes.LIKES_SENT}>Likes</ToggleButton>
+
         <ToggleButton value={activityTypes.MATCHES}>Matches</ToggleButton>
         <ToggleButton value={activityTypes.MESSAGES}>Messages</ToggleButton>
         <ToggleButton value={activityTypes.MET}>First Dates</ToggleButton>

@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  timeDay,
-  timeDays,
-  timeWeek,
-  timeWeeks,
-  timeMonths,
-  timeMonth,
-  timeYear,
-  timeSaturday,
-} from "d3-time";
+import { timeDay } from "d3-time";
 
 import { getDaysInMonth } from "./utils";
 import { monthsFullName } from "./constants";
@@ -38,7 +29,7 @@ const Calendar = ({ data, year, month, getColor }) => {
       <text y={textHeight}>{monthsFullName[month]}</text>
 
       <g y={textHeight}>
-        {days.map((day, index) => {
+        {days.map((day) => {
           return (
             <rect
               key={day.id}
@@ -49,7 +40,9 @@ const Calendar = ({ data, year, month, getColor }) => {
               height={dimension}
               stroke="gray"
               strokeWidth={1}
-            />
+            >
+              <title>{day.value}</title>
+            </rect>
           );
         })}
       </g>

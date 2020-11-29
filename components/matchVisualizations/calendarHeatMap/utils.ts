@@ -3,7 +3,10 @@ import { scaleLinear } from "d3-scale";
 import { interpolatePurples } from "d3-scale-chromatic";
 import _ from "lodash";
 import moment from "moment";
-import { CalendarData } from "./types";
+import { DailyActivity, ActivityCommon } from "./types";
+import { isMatchFromReceivedLike } from "components/matchVisualizations/utils";
+import { RawActivity } from "components/matchVisualizations/types";
+import { matchTypes } from "components/matchVisualizations/calendarHeatMap/constants";
 
 export const getDaysInMonth = (
   dates: Date[],
@@ -26,13 +29,17 @@ export const getDaysInMonth = (
   });
 };
 
-export const getDateRange = (data: CalendarData[]) => {
+export const getDateRange = (data: DailyActivity[]) => {
   const dateStrings = data.map((datum) => datum.date).sort();
 
   return [_.first(dateStrings), _.last(dateStrings)];
 };
 
-const getTimeMonths = (year: number, firstMonth: number, lastMonth: number) => {
+const getTimeMonths = (
+  year: number,
+  firstMonth: number,
+  lastMonth: number
+): Date[] => {
   return timeMonths(
     new Date(year, firstMonth, 1),
     new Date(year, lastMonth + 1, 1)
@@ -58,7 +65,7 @@ const getMonthsInYear = (years, firstMonth, lastMonth) => (year, index) => {
   }));
 };
 
-export const getYearsWithMonthlyValues = (data: CalendarData[]) => {
+export const getYearsWithMonthlyValues = (data: DailyActivity[]) => {
   const [firstDate, lastDate] = getDateRange(data);
 
   // TODO: earliestMonth turns to 04-30 if we have 05-01. Why does new Date work that way? Figure it out
@@ -69,7 +76,7 @@ export const getYearsWithMonthlyValues = (data: CalendarData[]) => {
   const latestYear = new Date(lastDate).getFullYear();
 
   // Add one to lastYear, because _.range not inclusive of final year
-  const years = _.range(earliestYear, latestYear + 1);
+  const years: number[] = _.range(earliestYear, latestYear + 1);
 
   const monthsAvailablePerYear = years.map(
     getMonthsInYear(years, earliestMonth, latestMonth)
@@ -78,7 +85,7 @@ export const getYearsWithMonthlyValues = (data: CalendarData[]) => {
   return monthsAvailablePerYear;
 };
 
-const getValueRange = (data: CalendarData[]): [number, number] => {
+const getValueRange = (data: DailyActivity[]): [number, number] => {
   const values = data.map((datum) => datum.value);
 
   const min: number = _.min(values);
@@ -88,7 +95,7 @@ const getValueRange = (data: CalendarData[]): [number, number] => {
 };
 
 export const getColorScale = (
-  data: CalendarData[]
+  data: DailyActivity[]
 ): ((value: number) => string) => {
   const domain = getValueRange(data);
 
@@ -96,11 +103,28 @@ export const getColorScale = (
   return scaleLinear().domain(domain).range([0.25, 0.75]);
 };
 
+const appendMetadata = (activity: RawActivity) => {
+  if (isMatchFromReceivedLike(activity)) {
+    return {
+      ...activity,
+      match: [
+        {
+          ...activity.match[0],
+          match_type: matchTypes.match_from_received_like,
+        },
+      ],
+    };
+  }
+
+  return activity;
+};
+
 export const formatCalendarActivities = (
-  activities: any = [],
-  activityFilter: (activity: any) => boolean = () => true
-) => {
-  const flattened = activities.map((activity) => {
+  activities: RawActivity[] = [],
+  activityFilter: (activity: RawActivity) => boolean = () => true
+): DailyActivity[] => {
+  const activitiesWithMetadata = activities.map(appendMetadata);
+  const flattened = activitiesWithMetadata.map((activity) => {
     const values = Object.values(activity);
     return _.flatten(values);
   });
