@@ -54,7 +54,6 @@ const CalendarFilterable = ({ activities, width = 500 }: Props) => {
         onChange={handleActivityTypeChange}
         size={"small"}
       >
-        <ToggleButton value={activityTypes.ALL_LIKES}>All Likes</ToggleButton>
         <ToggleButton value={activityTypes.LIKES_SENT}>Sent</ToggleButton>
         <ToggleButton value={activityTypes.LIKES_RECEIVED}>
           Received
