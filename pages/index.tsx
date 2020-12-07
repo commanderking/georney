@@ -26,20 +26,24 @@ export default function Home() {
           {/* <p className={styles.description}>Democratizing Dating Data</p> */}
           <MatchesDropZone />
           <small className={styles.dropZoneText}>
-            File is NOT uploaded to or saved on server. Verify{" "}
+            File is NOT uploaded and is NEVER saved. Verify{" "}
             <a href="https://github.com/commanderking/georney" target="_blank">
               the code
             </a>
             .
           </small>
-          <div className={styles.actions}>
+
+          <p>
+            Don't have your data?{" "}
             <a
               href="https://hingeapp.zendesk.com/hc/en-us/articles/360011235813-How-do-I-request-a-copy-of-my-personal-data-"
               target="_blank"
             >
-              <button className={styles.step}>Get my Hinge Data</button>
+              Request it from Hinge
             </a>
+          </p>
 
+          <div className={styles.actions}>
             <button
               className={styles.step}
               onClick={() => {
@@ -47,7 +51,7 @@ export default function Home() {
                   examplesRef.current.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              See Visualizations
+              See Sample Visualizations
             </button>
           </div>
         </div>
