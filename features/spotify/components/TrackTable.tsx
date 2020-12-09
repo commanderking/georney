@@ -1,24 +1,37 @@
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid, ColDef } from "@material-ui/data-grid";
 
-const columns = [
-  { field: "trackName", headerName: "Track Name", width: 200 },
+const columns: ColDef[] = [
   {
-    field: "artistName",
-    headerName: "Artist",
-    width: 200,
+    field: "",
+    headerName: "#",
+    width: 20,
+    valueGetter: (params) => params.rowIndex + 1,
+    sortable: false,
   },
+  { field: "trackName", headerName: "Track Name", flex: 6 },
   {
     field: "plays",
     headerName: "Plays",
-    width: 200,
+    flex: 2,
+  },
+  {
+    field: "artistName",
+    headerName: "Artist",
+    flex: 4,
   },
 ];
 
 const TrackTable = ({ data }) => {
-  console.log("data", data);
   return (
-    <div style={{ height: "800px", width: "80%" }}>
-      <DataGrid rows={data} columns={columns} pageSize={100} />
+    <div style={{ height: "800px", maxWidth: "500px", margin: "auto" }}>
+      <h3>Most Played Songs</h3>
+      <DataGrid
+        autoHeight
+        rows={data}
+        columns={columns}
+        pageSize={10}
+        hideFooterSelectedRowCount
+      />
     </div>
   );
 };

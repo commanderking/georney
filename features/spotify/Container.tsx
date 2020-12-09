@@ -6,10 +6,8 @@ import TrackTable from "features/spotify/components/TrackTable";
 
 const SpotifyContainer = () => {
   const tracks = getTrackCounts([...streamZero, ...streamOne]);
-  console.log("test", tracks);
   return (
     <div>
-      <h1>Spotify Land</h1>
       <TrackTable data={tracks} />
     </div>
   );

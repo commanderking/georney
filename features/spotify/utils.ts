@@ -29,20 +29,20 @@ const processInitialData = (trackStreams: RawTrackStream[]) => {
   }));
 };
 
-export const getTracksByTrackName = (trackStreams: RawTrackStream[]) => {
+const getTracksByTrackName = (trackStreams: RawTrackStream[]) => {
   const processedTracks = processInitialData(trackStreams);
   const tracksByArtist = _.groupBy(processedTracks, "id");
   return tracksByArtist;
 };
 
 export const getTrackCounts = (trackStreams: RawTrackStream[]) => {
-  const trackStreamsByArtist = getTracksByTrackName(trackStreams);
+  const trackStreamsByTrackName = getTracksByTrackName(trackStreams);
 
-  const trackStream = _.map(trackStreamsByArtist, (stream) => {
+  const trackStream = _.map(trackStreamsByTrackName, (streams) => {
     return {
-      ...stream[0],
-      plays: stream.length,
-      rawStreams: stream,
+      ...streams[0],
+      plays: streams.length,
+      rawStreams: streams,
     };
   });
   return _.sortBy(trackStream, (track) => track.plays).reverse();
