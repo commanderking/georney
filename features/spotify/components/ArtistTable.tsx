@@ -1,6 +1,5 @@
 import { DataGrid, ColDef } from "@material-ui/data-grid";
 import { getHoursAndMinutes } from "features/spotify/utils";
-import Popover from "@material-ui/core/Popover";
 
 const columns: ColDef[] = [
   {
@@ -37,7 +36,7 @@ const columns: ColDef[] = [
 
 const ArtistTable = ({ data }) => {
   return (
-    <div style={{ height: "800px", maxWidth: "500px", margin: "auto" }}>
+    <div style={{ height: "800px", maxWidth: "800px", margin: "auto" }}>
       <h3>Most Played Artists</h3>
 
       <DataGrid

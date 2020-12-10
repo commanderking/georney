@@ -6,8 +6,8 @@ import TrackTable from "features/spotify/components/TrackTable";
 import ArtistTable from "features/spotify/components/ArtistTable";
 const SpotifyContainer = () => {
   const tracks = getTrackCounts([...streamZero, ...streamOne]);
-  const artists = getStreamsByArtistName([...streamZero]);
-  console.log("artists", artists);
+  const artists = getStreamsByArtistName([...streamZero, ...streamOne]);
+
   return (
     <div>
       <a
