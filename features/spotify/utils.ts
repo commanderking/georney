@@ -1,20 +1,12 @@
 import { RawTrackStream, TrackStream } from "features/spotify/types";
 import _ from "lodash";
+import moment from "moment";
 
-export const targetStructure = {
-  byArtist: {
-    artist_name: {
-      totalMs: 10000,
-      rawData: [],
-    },
-  },
-  bySong: {
-    // append artist_name to guarantee uniqueness as much as possible
-    song_name_artist_name: {
-      totalMs: 20000,
-      rawData: [],
-    },
-  },
+export const getHoursAndMinutes = (milliseconds: number) => {
+  const time = moment.duration(milliseconds);
+
+  const dayHours = time.days() * 24;
+  return `${dayHours + time.hours()}hr ${time.minutes()}m`;
 };
 
 const getTrackArtistKey = (track) => {
@@ -31,8 +23,8 @@ const processInitialData = (trackStreams: RawTrackStream[]) => {
 
 const getTracksByTrackName = (trackStreams: RawTrackStream[]) => {
   const processedTracks = processInitialData(trackStreams);
-  const tracksByArtist = _.groupBy(processedTracks, "id");
-  return tracksByArtist;
+  const tracksById = _.groupBy(processedTracks, "id");
+  return tracksById;
 };
 
 export const getTrackCounts = (trackStreams: RawTrackStream[]) => {
@@ -46,4 +38,33 @@ export const getTrackCounts = (trackStreams: RawTrackStream[]) => {
     };
   });
   return _.sortBy(trackStream, (track) => track.plays).reverse();
+};
+
+const getArtistStreamData = (streams: RawTrackStream[]) => {
+  return streams.reduce(
+    (compiledStreamData, currentStream) => {
+      return {
+        ...compiledStreamData,
+        plays: compiledStreamData.plays + 1,
+        msPlayed: compiledStreamData.msPlayed + currentStream.msPlayed,
+        trackNames: compiledStreamData.trackNames.add(currentStream.trackName),
+      };
+    },
+    {
+      id: `${streams[0].artistName}`,
+      plays: 0,
+      msPlayed: 0,
+      artistName: streams[0].artistName,
+      trackNames: new Set(),
+    }
+  );
+};
+
+export const getStreamsByArtistName = (trackStreams: RawTrackStream[]) => {
+  const streamsByArtist = _.groupBy(trackStreams, "artistName");
+  const artistStreams = _.map(streamsByArtist, (streams) => {
+    return getArtistStreamData(streams);
+  });
+
+  return _.sortBy(artistStreams, "msPlayed").reverse();
 };
