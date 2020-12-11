@@ -1,4 +1,8 @@
-import { RawTrackStream, TrackStream } from "features/spotify/types";
+import {
+  RawTrackStream,
+  TrackStream,
+  ArtistStream,
+} from "features/spotify/types";
 import _ from "lodash";
 import moment from "moment";
 
@@ -56,8 +60,23 @@ const getArtistStreamData = (streams: RawTrackStream[]) => {
       msPlayed: 0,
       artistName: streams[0].artistName,
       trackNames: new Set(),
+      allStreams: streams,
     }
   );
+};
+
+export const getTopArtistStreams = (artists: ArtistStream[]) => {
+  return artists.slice(0, 49).map((artist) => {
+    return {
+      ...artist,
+      formattedStreams: artist.allStreams.map((stream) => ({
+        msPlayed: stream.msPlayed,
+        // each stream will count once towards streams played in future data
+        value: 1,
+        date: stream.endTime.split(" ")[0],
+      })),
+    };
+  });
 };
 
 export const getStreamsByArtistName = (trackStreams: RawTrackStream[]) => {

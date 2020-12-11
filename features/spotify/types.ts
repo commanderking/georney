@@ -13,3 +13,12 @@ export type TrackStream = {
   trackName: string;
   msPlayed: number;
 };
+
+export type ArtistStream = {
+  id: string;
+  plays: number;
+  msPlayed: number;
+  artistName: string;
+  trackNames: Set<string>;
+  allStreams: TrackStream[];
+};
