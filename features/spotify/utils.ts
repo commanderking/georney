@@ -19,6 +19,10 @@ export const getHoursAndMinutes = (milliseconds: number) => {
   return `${dayHours + time.hours()}hr ${time.minutes()}m`;
 };
 
+const getStreamDate = (stream: RawTrackStream) => {
+  return new Date(stream.endTime);
+};
+
 const getTrackArtistKey = (track) => {
   const { trackName, artistName } = track;
   return `${trackName.split(" ").join("_")}_${artistName.split(" ").join("_")}`;
@@ -79,7 +83,7 @@ export const getTopArtistStreams = (artists: ArtistStream[]) => {
         msPlayed: stream.msPlayed,
         // each stream will count once towards streams played in future data
         value: 1,
-        date: stream.endTime.split(" ")[0],
+        date: getStreamDate(stream),
       })),
     };
   });
@@ -150,10 +154,6 @@ export const getColorScaler = (artists: TopArtistStream[]) => {
 
   // color scheme from - https://www.schemecolor.com/sample?getcolor=dc1c13
   return scaleCluster().domain(allMonthlyValues).range(redColorScale);
-};
-
-const getStreamDate = (stream: RawTrackStream) => {
-  return new Date(stream.endTime);
 };
 
 export const getStartAndEndDate = (streams: RawTrackStream[]) => {
