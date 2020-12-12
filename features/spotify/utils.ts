@@ -151,3 +151,16 @@ export const getColorScaler = (artists: TopArtistStream[]) => {
   // color scheme from - https://www.schemecolor.com/sample?getcolor=dc1c13
   return scaleCluster().domain(allMonthlyValues).range(redColorScale);
 };
+
+const getStreamDate = (stream: RawTrackStream) => {
+  return new Date(stream.endTime);
+};
+
+export const getStartAndEndDate = (streams: RawTrackStream[]) => {
+  const streamsOrderedByEndTime = _.sortBy(streams, "endTime");
+
+  return {
+    startDate: getStreamDate(_.first(streamsOrderedByEndTime)),
+    endDate: getStreamDate(_.last(streamsOrderedByEndTime)),
+  };
+};

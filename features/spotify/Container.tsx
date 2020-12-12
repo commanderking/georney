@@ -5,14 +5,17 @@ import {
   getTrackCounts,
   getStreamsByArtistName,
   getTopArtistStreams,
+  getStartAndEndDate,
 } from "features/spotify/utils";
 import TrackTable from "features/spotify/components/TrackTable";
 import ArtistTable from "features/spotify/components/ArtistTable";
 import ArtistMonthsHeatMap from "features/spotify/components/ArtistMonthsHeatMap";
 
 const SpotifyContainer = () => {
-  const tracks = getTrackCounts([...streamZero, ...streamOne]);
-  const artists = getStreamsByArtistName([...streamZero, ...streamOne]);
+  const streams = [...streamZero, ...streamOne];
+  const tracks = getTrackCounts(streams);
+  const artists = getStreamsByArtistName(streams);
+  const { startDate, endDate } = getStartAndEndDate(streams);
 
   const topArtistStreams = getTopArtistStreams(artists);
   return (
@@ -25,7 +28,11 @@ const SpotifyContainer = () => {
       </a>
       <TrackTable data={tracks} />
       <ArtistTable data={artists} />
-      <ArtistMonthsHeatMap artists={topArtistStreams} />
+      <ArtistMonthsHeatMap
+        artists={topArtistStreams}
+        startDate={startDate}
+        endDate={endDate}
+      />
     </div>
   );
 };

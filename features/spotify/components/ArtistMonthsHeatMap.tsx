@@ -1,12 +1,10 @@
 import React from "react";
 import TimelineHeatmap from "components/timelineHeatMap/TimelineHeatmap";
 import styles from "./ArtistMonthsHeatMap.module.scss";
-import { getColorScaler } from "features/spotify/utils";
+import { getColorScaler, getStartAndEndDate } from "features/spotify/utils";
 
-const ArtistMonthsHeatMap = ({ artists }) => {
+const ArtistMonthsHeatMap = ({ artists, startDate, endDate }) => {
   const colorScaler = getColorScaler(artists);
-
-  const clusters = colorScaler.clusters();
 
   const getColor = (value: number) => {
     if (value === 0) {
@@ -25,6 +23,8 @@ const ArtistMonthsHeatMap = ({ artists }) => {
             <TimelineHeatmap
               data={artist.formattedStreams}
               getColor={getColor}
+              startDate={startDate}
+              endDate={endDate}
             />
           </React.Fragment>
         );
