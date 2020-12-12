@@ -26,6 +26,7 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-dropzone": "^11.2.2",
+    "react-tooltip": "^4.2.11",
     "sass": "^1.28.0"
   },
   "devDependencies": {

@@ -13,6 +13,16 @@ type Props = {
 
 const defaultGetColor = getColorScaler(10);
 
+const getTooltipProps = (month) => {
+  if (month.value === 0) {
+    return {};
+  }
+  return {
+    "data-tip": month.value,
+    "data-for": "artistMonth",
+  };
+};
+
 const TimelineHeatMap = ({
   data,
   getColor,
@@ -27,13 +37,15 @@ const TimelineHeatMap = ({
   });
 
   const side = 25;
-  const getX = (index: number) => side * index + 2 * index;
+  const spacing = 2;
+  const getX = (index: number) => side * index + spacing * index;
   return (
     <svg width={400} height={25}>
       {!isHeaderRow &&
         months.map((month, index) => {
           return (
             <rect
+              {...getTooltipProps(month)}
               key={month.monthDate}
               fill={getColorActual(month.value)}
               width={side}
@@ -50,7 +62,7 @@ const TimelineHeatMap = ({
       {isHeaderRow &&
         months.map((month, index) => {
           return (
-            <text x={getX(index)} y={20} fontSize={12}>
+            <text key={month.monthDate} x={getX(index)} y={20} fontSize={12}>
               {moment(month.monthDate).format("MMM")}
             </text>
           );

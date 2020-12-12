@@ -3,8 +3,14 @@ import TimelineHeatmap from "components/timelineHeatMap/TimelineHeatmap";
 import styles from "./ArtistMonthsHeatMap.module.scss";
 import { getColorScaler } from "features/spotify/utils";
 import moment from "moment";
+import ReactTooltip from "react-tooltip";
 
-const ArtistMonthsHeatMap = ({ artists, startDate, endDate }) => {
+const ArtistMonthsHeatMap = ({
+  artists,
+  startDate,
+  endDate,
+  showTooltip = true,
+}) => {
   const colorScaler = getColorScaler(artists);
 
   const getColor = (value: number) => {
@@ -51,6 +57,25 @@ const ArtistMonthsHeatMap = ({ artists, startDate, endDate }) => {
           );
         })}
       </div>
+      {showTooltip && (
+        <ReactTooltip
+          id="artistMonth"
+          getContent={(dataTip) => {
+            return (
+              <p
+                style={{
+                  backgroundColor: "white",
+                  padding: "10px",
+                  border: "1px solid black",
+                  fontSize: 16,
+                }}
+              >
+                {dataTip} songs played
+              </p>
+            );
+          }}
+        ></ReactTooltip>
+      )}
     </div>
   );
 };
