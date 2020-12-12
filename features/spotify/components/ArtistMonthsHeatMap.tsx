@@ -18,9 +18,9 @@ const ArtistMonthsHeatMap = ({ artists }) => {
 
   return (
     <div className={styles.container}>
-      {artists.map((artist) => {
+      {artists.map((artist, index) => {
         return (
-          <React.Fragment>
+          <React.Fragment key={`${artist.artistName}-${index}`}>
             <div className={styles.artistText}>{artist.artistName}</div>
             <TimelineHeatmap
               data={artist.formattedStreams}

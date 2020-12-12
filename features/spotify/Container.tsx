@@ -15,7 +15,6 @@ const SpotifyContainer = () => {
   const artists = getStreamsByArtistName([...streamZero, ...streamOne]);
 
   const topArtistStreams = getTopArtistStreams(artists);
-  console.log("topArtistStreams", topArtistStreams);
   return (
     <div>
       <a
