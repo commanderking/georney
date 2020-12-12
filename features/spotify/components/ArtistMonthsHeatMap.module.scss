@@ -1,0 +1,21 @@
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+
+.chartContainer {
+  max-width: 600px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 3fr 4fr;
+  row-gap: 5px;
+}
+
+.artistText {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+  margin-right: 10px;
+}

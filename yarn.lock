@@ -2136,6 +2136,11 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
+ckmeans@^2.0.1:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/ckmeans/-/ckmeans-2.1.0.tgz#ad981cbb1af8da79bebbe82fca441ef1dc0b2fe7"
+  integrity sha512-xLKsOWXy2QqD8kzyddAV3N87dWZk1sscaUjJmjUccJ7OMddCYJKGR+ff2QIu3sN5uhmuB7prtmYLLV5t6V1cYw==
+
 class-utils@^0.3.5:
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/class-utils/-/class-utils-0.3.6.tgz#f93369ae8b9a7ce02fd41faad0ca83033190c463"
@@ -2462,6 +2467,11 @@ cyclist@^1.0.1:
   resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-2.8.0.tgz#f76e10ad47f1f4f75f33db5fc322eb9ffde5ef23"
   integrity sha512-6V272gsOeg7+9pTW1jSYOR1QE37g95I3my1hBmY+vOUNHRrk9yt4OTz/gK7PMkVAVDrYYq4mq3grTiZ8iJdNIw==
 
+d3-array@^2.9.1:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-2.9.1.tgz#f355cc72b46c8649b3f9212029e2d681cb5b9643"
+  integrity sha512-Ob7RdOtkqsjx1NWyQHMFLtCSk6/aKTxDdC4ZIolX+O+mDD2RzrsYgAyc0WGAlfYFVELLSilS7w8BtE3PKM8bHg==
+
 d3-color@1, d3-color@^1.2.3:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/d3-color/-/d3-color-1.4.1.tgz#c52002bf8846ada4424d55d97982fef26eb3bc8a"
@@ -2529,6 +2539,13 @@ d3-scale-chromatic@^2.0.0:
   dependencies:
     d3-color "1 - 2"
     d3-interpolate "1 - 2"
+
+d3-scale-cluster@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/d3-scale-cluster/-/d3-scale-cluster-2.0.1.tgz#7ebfc146204b1d96a129903ead9dfc4d2d781191"
+  integrity sha512-1ll05baOigYr4rh4uIE15J4DA+JnGy8HutZUvj6VcBJmHrbEsmTAnwdb1KrxX/bT9cS7oxG/w5ONFtOP2pSKrQ==
+  dependencies:
+    ckmeans "^2.0.1"
 
 d3-scale@^3.0.0, d3-scale@^3.2.3:
   version "3.2.3"
