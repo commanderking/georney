@@ -1,6 +1,5 @@
 import { DataPoint } from "./types";
-import { formatData } from "./utils";
-
+import { formatData, getColorScaler } from "./utils";
 const mockData = [
   {
     date: "2020-02-05",
@@ -28,16 +27,17 @@ const mockData = [
 type Props = {
   data: DataPoint[];
   // valueRange: [];
+  getColor?: (value: number) => string;
 };
 
-const TimelineHeatMap = ({ data }: Props) => {
-  console.log("heatmap data", data);
+const defaultGetColor = getColorScaler(10);
+
+const TimelineHeatMap = ({ data, getColor }: Props) => {
+  const getColorActual = getColor || defaultGetColor;
   const months = formatData(data, {
     startDate: new Date("2020-01-05"),
     endDate: new Date("2020-12-07"),
   });
-
-  console.log("months", months);
 
   const side = 25;
   return (
@@ -46,7 +46,7 @@ const TimelineHeatMap = ({ data }: Props) => {
         return (
           <rect
             key={month.monthDate}
-            fill={month.color}
+            fill={getColorActual(month.value)}
             width={side}
             height={side}
             x={side * index + 2 * index}

@@ -13,7 +13,26 @@ const getMonths = (startDate, endDate) => {
   );
 };
 
-const getColorScaler = (maxValue: number) => {
+const getColorRange = () => {
+  // We're going to use 100
+  const lightPink = _.times(20, "#F6BDC0");
+  const darkerPink = _.times(20, "#F07470");
+  const red = _.times(20, "#DC1C13");
+  const maroon = _.times(20, "#9A140D");
+  const darkMaroon = _.times(19, "#580B08");
+  const black = ["black"];
+
+  return [
+    ...lightPink,
+    ...darkerPink,
+    ...red,
+    ...maroon,
+    ...darkMaroon,
+    ...black,
+  ];
+};
+
+export const getColorScaler = (maxValue: number) => {
   return scaleLinear()
     .domain([0, maxValue])
     .range(["white", "#F6BDC0", "#F1959B", "#F07470", " #EA4C46", "#DC1C13"]);
@@ -23,7 +42,7 @@ export const formatData = (
   rawData: DataPoint[],
   { startDate, endDate }: { startDate: Date; endDate: Date }
 ) => {
-  const getColor = getColorScaler(10);
+  // const getColor = getColorScaler(10);
 
   const months = getMonths(startDate, endDate);
 
@@ -47,7 +66,7 @@ export const formatData = (
     return {
       monthDate: moment(month.date).format("YYYY-MM"),
       value,
-      color: getColor(value),
+      // color: getColor(value),
     };
   });
 

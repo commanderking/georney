@@ -22,3 +22,12 @@ export type ArtistStream = {
   trackNames: Set<string>;
   allStreams: TrackStream[];
 };
+
+export type TopArtistStream = ArtistStream & {
+  formattedStreams: {
+    msPlayed: number;
+    // each stream will count once towards streams played in future data
+    value: 1;
+    date: string;
+  }[];
+};
