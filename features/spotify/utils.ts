@@ -1,14 +1,11 @@
 import {
   RawTrackStream,
-  TrackStream,
   ArtistStream,
   TopArtistStream,
 } from "features/spotify/types";
 import _ from "lodash";
 import moment from "moment";
-import { max, min } from "d3-array";
 import { formatData } from "components/timelineHeatMap/utils";
-import { scaleQuantile } from "d3-scale";
 import scaleCluster from "d3-scale-cluster";
 import { redColorScale } from "features/spotify/constants";
 
