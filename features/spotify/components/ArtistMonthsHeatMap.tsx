@@ -14,12 +14,9 @@ const ArtistMonthsHeatMap = ({
   showTooltip = true,
 }) => {
   const colorScaler = getColorScaler(artists);
-
+  // clusters only contain the division between
   const clusters = [1, ...colorScaler.clusters()];
-
   const legendData = getLegendData(redColorScale, clusters);
-
-  console.log("legendData", legendData);
 
   const getColor = (value: number) => {
     if (value === 0) {

@@ -8,6 +8,7 @@ import moment from "moment";
 import { formatData } from "components/timelineHeatMap/utils";
 import scaleCluster from "d3-scale-cluster";
 import { redColorScale } from "features/spotify/constants";
+import { LegendData } from "features/spotify/types";
 
 export const getHoursAndMinutes = (milliseconds: number) => {
   const time = moment.duration(milliseconds);
@@ -180,16 +181,12 @@ const getDisplayText = (min, max) => {
 export const getLegendData = (
   colors: string[],
   clusters: number[]
-): {
-  color: string;
-  // Last color will have range from [number, null]
-  range: [number, number | null];
-  displayText: string;
-}[] => {
+): LegendData[] => {
   return colors.map((color, index) => {
     const min = clusters[index];
     const max = getMaxRange(clusters, index);
     return {
+      id: `legend-${color}-${index}`,
       color,
       range: [min, max],
       displayText: getDisplayText(min, max),

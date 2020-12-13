@@ -11,24 +11,14 @@ const HeatMapLegend = ({ legendMap }: Props) => {
       <h4>Legend - Play Count</h4>
       {legendMap.map((legend) => {
         return (
-          <div key={legend.displayText}>
+          <div key={legend.id}>
             <div
+              className={styles.legendIcon}
               style={{
                 backgroundColor: legend.color,
-                width: "20px",
-                height: "20px",
-                display: "inline-block",
               }}
             ></div>
-            <div
-              style={{
-                display: "inline-block",
-                marginRight: "3px",
-                marginLeft: "3px",
-              }}
-            >
-              {legend.displayText}
-            </div>
+            <div className={styles.legendText}>{legend.displayText}</div>
           </div>
         );
       })}

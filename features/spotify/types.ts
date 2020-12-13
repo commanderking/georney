@@ -33,7 +33,9 @@ export type TopArtistStream = ArtistStream & {
 };
 
 export type LegendData = {
+  id: string;
   color: string;
-  range: [number, number | undefined];
+  // range might be null if it's the last element in the legend
+  range: [number, number | null];
   displayText: string;
 };
