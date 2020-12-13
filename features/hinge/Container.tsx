@@ -1,5 +1,5 @@
 import Head from "next/head";
-import styles from "../styles/Home.module.scss";
+import styles from "./styles.module.scss";
 import MatchesDropZone from "components/matchesDropZone/MatchesDropZone";
 import { useRef } from "react";
 import Sankey from "components/matchVisualizations/Sankey/Sankey";
@@ -8,6 +8,10 @@ import activities from "data/matches.json";
 import { getActivitiesByMatchType } from "components/matchVisualizations/utils";
 
 export default function Home() {
+  const examplesRef = useRef(null);
+
+  // @ts-ignore
+  const activityMap = getActivitiesByMatchType(activities);
   return (
     <div className={styles.container}>
       <Head>
@@ -16,10 +20,53 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <div>
-          <h1 className={styles.title}>Visualize Your Data</h1>
+        <div className={styles.splash}>
+          <h1 className={styles.title}>Visualize Your Hinge Data</h1>
+
+          {/* <p className={styles.description}>Democratizing Dating Data</p> */}
+          <MatchesDropZone />
+          <small className={styles.dropZoneText}>
+            File is NOT uploaded and is NEVER saved. Verify{" "}
+            <a href="https://github.com/commanderking/georney" target="_blank">
+              the code
+            </a>
+            .
+          </small>
+
+          <p>
+            Don't have your data?{" "}
+            <a
+              href="https://hingeapp.zendesk.com/hc/en-us/articles/360011235813-How-do-I-request-a-copy-of-my-personal-data-"
+              target="_blank"
+            >
+              Request it from Hinge
+            </a>
+          </p>
+
+          <div className={styles.actions}>
+            <button
+              className={styles.step}
+              onClick={() => {
+                examplesRef &&
+                  examplesRef.current.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              See Sample Visualizations
+            </button>
+          </div>
         </div>
 
+        <div className={styles.examples} id="examples" ref={examplesRef}>
+          <div className={styles.exampleWrapper}>
+            <h3>Flow Chart (Sankey)</h3>
+            <Sankey activityMap={activityMap} />
+          </div>
+
+          <div className={styles.exampleWrapper}>
+            <h3>Monthly Activity</h3>
+            <CalendarFilterable activities={activities} width={"80vw"} />
+          </div>
+        </div>
         {/* <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>
             <h3>Documentation &rarr;</h3>
