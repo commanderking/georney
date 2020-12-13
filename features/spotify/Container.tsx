@@ -22,19 +22,19 @@ const SpotifyContainer = () => {
   const topArtistStreams = getTopArtistStreams(artists);
   return (
     <div className={styles.container}>
+      <ArtistMonthsHeatMap
+        artists={topArtistStreams}
+        startDate={startDate}
+        endDate={endDate}
+      />
+      <ArtistTable data={artists} />
+      <TrackTable data={tracks} />
       <a
         target="_blank"
         href="https://support.spotify.com/us/article/data-rights-and-privacy-settings/"
       >
         How to Download Data from Spotify
       </a>
-      <TrackTable data={tracks} />
-      <ArtistTable data={artists} />
-      <ArtistMonthsHeatMap
-        artists={topArtistStreams}
-        startDate={startDate}
-        endDate={endDate}
-      />
     </div>
   );
 };
