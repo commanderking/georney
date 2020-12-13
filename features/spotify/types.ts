@@ -16,7 +16,7 @@ export type TrackStream = {
 
 export type ArtistStream = {
   id: string;
-  plays: number;
+  playCount: number;
   msPlayed: number;
   artistName: string;
   trackNames: Set<string>;

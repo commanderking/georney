@@ -47,11 +47,11 @@ export const getTrackCounts = (trackStreams: RawTrackStream[]) => {
   const trackStream = _.map(trackStreamsByTrackName, (streams) => {
     return {
       ...streams[0],
-      plays: streams.length,
+      playCount: streams.length,
       rawStreams: streams,
     };
   });
-  return _.sortBy(trackStream, (track) => track.plays).reverse();
+  return _.sortBy(trackStream, (track) => track.playCount).reverse();
 };
 
 const getArtistStreamData = (streams: RawTrackStream[]) => {
@@ -59,14 +59,14 @@ const getArtistStreamData = (streams: RawTrackStream[]) => {
     (compiledStreamData, currentStream) => {
       return {
         ...compiledStreamData,
-        plays: compiledStreamData.plays + 1,
+        playCount: compiledStreamData.playCount + 1,
         msPlayed: compiledStreamData.msPlayed + currentStream.msPlayed,
         trackNames: compiledStreamData.trackNames.add(currentStream.trackName),
       };
     },
     {
       id: `${streams[0].artistName}`,
-      plays: 0,
+      playCount: 0,
       msPlayed: 0,
       artistName: streams[0].artistName,
       trackNames: new Set(),
@@ -95,7 +95,11 @@ export const getStreamsByArtistName = (trackStreams: RawTrackStream[]) => {
     return getArtistStreamData(streams);
   });
 
-  return _.sortBy(artistStreams, "msPlayed").reverse();
+  const sortedArtistStreams = [...artistStreams].sort(
+    (streamA, streamB) => streamB.playCount - streamA.playCount
+  );
+
+  return sortedArtistStreams;
 };
 
 const getArtistsByMonth = (artists: TopArtistStream[]) => {

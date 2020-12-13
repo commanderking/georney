@@ -10,7 +10,7 @@ const columns: ColDef[] = [
   },
   { field: "trackName", headerName: "Track Name", flex: 6 },
   {
-    field: "plays",
+    field: "playCount",
     headerName: "Plays",
     flex: 2,
   },
