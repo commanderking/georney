@@ -178,7 +178,7 @@ const getDisplayText = (min, max) => {
   return `${min} - ${max}`;
 };
 
-export const getLegendData = (
+export const getClustersLegendData = (
   colors: string[],
   clusters: number[]
 ): LegendData[] => {

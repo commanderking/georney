@@ -1,7 +1,7 @@
 import React from "react";
 import TimelineHeatmap from "components/timelineHeatMap/TimelineHeatmap";
 import styles from "./ArtistMonthsHeatMap.module.scss";
-import { getColorScaler, getLegendData } from "features/spotify/utils";
+import { getColorScaler, getClustersLegendData } from "features/spotify/utils";
 import moment from "moment";
 import ReactTooltip from "react-tooltip";
 import { redColorScale } from "features/spotify/constants";
@@ -14,9 +14,10 @@ const ArtistMonthsHeatMap = ({
   showTooltip = true,
 }) => {
   const colorScaler = getColorScaler(artists);
-  // clusters only contain the division between
+  // clusters only contain the division between clusters, so we'll always be one short.
+  // Assume 0 is not included in the first color so start count at one.
   const clusters = [1, ...colorScaler.clusters()];
-  const legendData = getLegendData(redColorScale, clusters);
+  const legendData = getClustersLegendData(redColorScale, clusters);
 
   const getColor = (value: number) => {
     if (value === 0) {
@@ -55,12 +56,14 @@ const ArtistMonthsHeatMap = ({
                 <div>
                   <div className={styles.artistText}>{artist.artistName}</div>
                 </div>
-                <TimelineHeatmap
-                  data={artist.formattedStreams}
-                  getColor={getColor}
-                  startDate={startDate}
-                  endDate={endDate}
-                />
+                <div>
+                  <TimelineHeatmap
+                    data={artist.formattedStreams}
+                    getColor={getColor}
+                    startDate={startDate}
+                    endDate={endDate}
+                  />
+                </div>
               </React.Fragment>
             );
           })}
