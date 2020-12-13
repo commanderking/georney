@@ -18,7 +18,9 @@ export const getHoursAndMinutes = (milliseconds: number) => {
 };
 
 const getStreamDate = (stream: RawTrackStream) => {
-  return new Date(stream.endTime);
+  // streamDate format "2020-08-12 03:01" - but safari doesn't like new Date on this,
+  // chrome and firefox can handle it
+  return new Date(stream.endTime.split(" ")[0]);
 };
 
 const getTrackArtistKey = (track) => {
@@ -110,7 +112,6 @@ const getArtistsByMonth = (artists: TopArtistStream[]) => {
 // Flattens the values per month for understanding how to quantile the data
 const getAllMonthlyValues = (artists: TopArtistStream[]) => {
   const artistsByMonth = getArtistsByMonth(artists);
-
   const initialValues: number[] = [];
   const allArtistsMonthlyStats = artistsByMonth.map((months) => {
     return months.reduce((allValues, currentMonth) => {
