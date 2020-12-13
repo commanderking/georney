@@ -31,3 +31,9 @@ export type TopArtistStream = ArtistStream & {
     date: string;
   }[];
 };
+
+export type LegendData = {
+  color: string;
+  range: [number, number | undefined];
+  displayText: string;
+};

@@ -1,18 +1,24 @@
 .container {
-  max-width: 600px;
+  max-width: 800px;
+  width: 100%;
   margin: auto;
 }
 
+// Contains chart and legend
+.chartArea {
+  display: grid;
+  grid-template-columns: 4fr 3fr;
+}
+
 .chartContainer {
-  max-width: 600px;
   margin: auto;
   display: grid;
-  grid-template-columns: 3fr 4fr;
+  grid-template-columns: 1fr 4fr;
   row-gap: 5px;
 }
 
 .artistText {
-  width: 250px;
+  max-width: 150px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

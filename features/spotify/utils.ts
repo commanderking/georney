@@ -161,3 +161,38 @@ export const getStartAndEndDate = (streams: RawTrackStream[]) => {
     endDate: getStreamDate(_.last(streamsOrderedByEndTime)),
   };
 };
+
+const getMaxRange = (clusters, index) => {
+  if (index + 1 === clusters.length) {
+    return null;
+  }
+  // -1 since we don't want to include first number of next cluster
+  return clusters[index + 1] - 1;
+};
+
+const getDisplayText = (min, max) => {
+  if (!max) {
+    return `${min}+`;
+  }
+  return `${min} - ${max}`;
+};
+
+export const getLegendData = (
+  colors: string[],
+  clusters: number[]
+): {
+  color: string;
+  // Last color will have range from [number, null]
+  range: [number, number | null];
+  displayText: string;
+}[] => {
+  return colors.map((color, index) => {
+    const min = clusters[index];
+    const max = getMaxRange(clusters, index);
+    return {
+      color,
+      range: [min, max],
+      displayText: getDisplayText(min, max),
+    };
+  });
+};
