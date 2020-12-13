@@ -37,10 +37,9 @@ const columns: ColDef[] = [
 const sortModel = [{ field: "playCount", sort: "desc" as SortDirection }];
 
 const ArtistTable = ({ data }) => {
-  console.log("data", data);
   return (
     <div style={{ height: "800px", maxWidth: "800px", margin: "auto" }}>
-      <h3>Most Played Artists</h3>
+      <h3>Top 100 Artists (by Play Count)</h3>
 
       <DataGrid
         autoHeight
