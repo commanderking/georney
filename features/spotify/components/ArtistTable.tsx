@@ -1,4 +1,4 @@
-import { DataGrid, ColDef } from "@material-ui/data-grid";
+import { DataGrid, ColDef, SortDirection } from "@material-ui/data-grid";
 import { getHoursAndMinutes } from "features/spotify/utils";
 
 const columns: ColDef[] = [
@@ -11,6 +11,20 @@ const columns: ColDef[] = [
   },
   { field: "artistName", headerName: "Artist Name", flex: 4 },
   {
+    field: "playCount",
+    headerName: "Play Count",
+    flex: 2,
+  },
+  {
+    field: "trackNames",
+    headerName: "Unique Songs",
+    flex: 2,
+    valueGetter: (params) => params.row.trackNames.size,
+    renderCell: (params) => {
+      return <div>{params.row.trackNames.size}</div>;
+    },
+  },
+  {
     field: "msPlayed",
     headerName: "Play Time",
     flex: 2,
@@ -18,23 +32,12 @@ const columns: ColDef[] = [
       return getHoursAndMinutes(params.row.msPlayed);
     },
   },
-  {
-    field: "plays",
-    headerName: "Tracks Played",
-    flex: 2,
-  },
-  {
-    field: "trackNames",
-    headerName: "Unique songs",
-    flex: 2,
-    valueFormatter: (params) => params.row.trackNames.size,
-    renderCell: (params) => {
-      return <div>{params.row.trackNames.size}</div>;
-    },
-  },
 ];
 
+const sortModel = [{ field: "playCount", sort: "desc" as SortDirection }];
+
 const ArtistTable = ({ data }) => {
+  console.log("data", data);
   return (
     <div style={{ height: "800px", maxWidth: "800px", margin: "auto" }}>
       <h3>Most Played Artists</h3>
@@ -42,6 +45,7 @@ const ArtistTable = ({ data }) => {
       <DataGrid
         autoHeight
         rows={data}
+        sortModel={sortModel}
         columns={columns}
         pageSize={10}
         hideFooterSelectedRowCount

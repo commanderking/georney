@@ -16,6 +16,7 @@ const SpotifyContainer = () => {
   const streams = [...streamZero, ...streamOne];
   const tracks = getTrackCounts(streams);
   const artists = getStreamsByArtistName(streams);
+
   const { startDate, endDate } = getStartAndEndDate(streams);
 
   const topArtistStreams = getTopArtistStreams(artists);
