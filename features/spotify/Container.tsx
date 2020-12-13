@@ -10,6 +10,7 @@ import {
 import TrackTable from "features/spotify/components/TrackTable";
 import ArtistTable from "features/spotify/components/ArtistTable";
 import ArtistMonthsHeatMap from "features/spotify/components/ArtistMonthsHeatMap";
+import styles from "./styles.module.scss";
 
 const SpotifyContainer = () => {
   const streams = [...streamZero, ...streamOne];
@@ -19,7 +20,7 @@ const SpotifyContainer = () => {
 
   const topArtistStreams = getTopArtistStreams(artists);
   return (
-    <div>
+    <div className={styles.container}>
       <a
         target="_blank"
         href="https://support.spotify.com/us/article/data-rights-and-privacy-settings/"

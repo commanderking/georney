@@ -8,6 +8,7 @@ import moment from "moment";
 import { formatData } from "components/timelineHeatMap/utils";
 import scaleCluster from "d3-scale-cluster";
 import { redColorScale } from "features/spotify/constants";
+import { LegendData } from "features/spotify/types";
 
 export const getHoursAndMinutes = (milliseconds: number) => {
   const time = moment.duration(milliseconds);
@@ -160,4 +161,35 @@ export const getStartAndEndDate = (streams: RawTrackStream[]) => {
     startDate: getStreamDate(_.first(streamsOrderedByEndTime)),
     endDate: getStreamDate(_.last(streamsOrderedByEndTime)),
   };
+};
+
+const getMaxRange = (clusters, index) => {
+  if (index + 1 === clusters.length) {
+    return null;
+  }
+  // -1 since we don't want to include first number of next cluster
+  return clusters[index + 1] - 1;
+};
+
+const getDisplayText = (min, max) => {
+  if (!max) {
+    return `${min}+`;
+  }
+  return `${min} - ${max}`;
+};
+
+export const getClustersLegendData = (
+  colors: string[],
+  clusters: number[]
+): LegendData[] => {
+  return colors.map((color, index) => {
+    const min = clusters[index];
+    const max = getMaxRange(clusters, index);
+    return {
+      id: `legend-${color}-${index}`,
+      color,
+      range: [min, max],
+      displayText: getDisplayText(min, max),
+    };
+  });
 };

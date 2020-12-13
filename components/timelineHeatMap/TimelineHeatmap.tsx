@@ -40,7 +40,7 @@ const TimelineHeatMap = ({
   const spacing = 2;
   const getX = (index: number) => side * index + spacing * index;
   return (
-    <svg width={400} height={25}>
+    <svg width={350} height={25}>
       {!isHeaderRow &&
         months.map((month, index) => {
           return (
