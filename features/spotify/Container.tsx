@@ -3,7 +3,7 @@ import streamOne from "data/spotify_streaming_1.json";
 import streamZero from "data/spotify_streaming_0.json";
 import {
   getTrackCounts,
-  getTop100ArtistStreams,
+  getStreamsByArtistName,
   getTopArtistStreams,
   getStartAndEndDate,
 } from "features/spotify/utils";
@@ -15,7 +15,7 @@ import styles from "./styles.module.scss";
 const SpotifyContainer = () => {
   const streams = [...streamZero, ...streamOne];
   const tracks = getTrackCounts(streams);
-  const artists = getTop100ArtistStreams(streams);
+  const artists = getStreamsByArtistName(streams);
 
   const { startDate, endDate } = getStartAndEndDate(streams);
 

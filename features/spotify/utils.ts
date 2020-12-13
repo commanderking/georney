@@ -89,7 +89,7 @@ export const getTopArtistStreams = (artists: ArtistStream[]) => {
   });
 };
 
-export const getTop100ArtistStreams = (trackStreams: RawTrackStream[]) => {
+export const getStreamsByArtistName = (trackStreams: RawTrackStream[]) => {
   const streamsByArtist = _.groupBy(trackStreams, "artistName");
   const artistStreams = _.map(streamsByArtist, (streams) => {
     return getArtistStreamData(streams);
@@ -99,7 +99,7 @@ export const getTop100ArtistStreams = (trackStreams: RawTrackStream[]) => {
     (streamA, streamB) => streamB.playCount - streamA.playCount
   );
 
-  return sortedArtistStreams.slice(0, 100);
+  return sortedArtistStreams;
 };
 
 const getArtistsByMonth = (artists: TopArtistStream[]) => {
