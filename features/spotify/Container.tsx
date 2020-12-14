@@ -24,7 +24,8 @@ const SpotifyContainer = () => {
     <div className={styles.container}>
       <ArtistMonthsHeatMap
         artists={topArtistStreams}
-        startDate={startDate}
+        // temporary - just for current visualization
+        startDate={new Date("2020-01-02")}
         endDate={endDate}
       />
       <ArtistTable data={artists} />
