@@ -1,6 +1,6 @@
 import React from "react";
-import streamOne from "data/spotify_streaming_1.json";
-import streamZero from "data/spotify_streaming_0.json";
+import streamOne from "data/StreamingHistory0.json";
+import streamZero from "data/StreamingHistory1.json";
 import {
   getTrackCounts,
   getStreamsByArtistName,
@@ -20,6 +20,7 @@ const SpotifyContainer = () => {
   const { startDate, endDate } = getStartAndEndDate(streams);
 
   const topArtistStreams = getTopArtistStreams(artists);
+
   return (
     <div className={styles.container}>
       <ArtistMonthsHeatMap
