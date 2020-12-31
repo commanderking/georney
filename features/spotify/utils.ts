@@ -75,8 +75,11 @@ const getArtistStreamData = (streams: RawTrackStream[]) => {
   );
 };
 
-export const getTopArtistStreams = (artists: ArtistStream[]) => {
-  return artists.slice(0, 25).map((artist) => {
+export const getTopArtistStreams = (
+  artists: ArtistStream[],
+  maxCount: number = 25
+) => {
+  return artists.slice(0, maxCount).map((artist) => {
     return {
       ...artist,
       formattedStreams: artist.allStreams.map((stream) => ({

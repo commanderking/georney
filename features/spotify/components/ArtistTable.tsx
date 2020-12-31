@@ -38,7 +38,7 @@ const sortModel = [{ field: "playCount", sort: "desc" as SortDirection }];
 
 const ArtistTable = ({ data }) => {
   return (
-    <div style={{ height: "800px", maxWidth: "800px", margin: "auto" }}>
+    <div style={{ height: "700px", maxWidth: "800px", margin: "auto" }}>
       <h3>Top 100 Artists (by Play Count)</h3>
 
       <DataGrid
