@@ -60,13 +60,13 @@ const MatchesDropZone = ({
 
   if (acceptedFiles.length > 0) {
     return (
-      <div>
-        <p>Files Uploaded</p>
-        <ul>
+      <div className={styles.filesWrapper}>
+        <h3>Files Uploaded</h3>
+        <div>
           {acceptedFiles.map((acceptedFile) => (
-            <li>{acceptedFile.name}</li>
+            <div>{acceptedFile.name}</div>
           ))}
-        </ul>
+        </div>
       </div>
       // <div className={styles.buttonWrapper}>
       //   <Link href="/visualize">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TimelineHeatmap from "components/timelineHeatMap/TimelineHeatmap";
 import styles from "./ArtistMonthsHeatMap.module.scss";
 import { getColorScaler, getClustersLegendData } from "features/spotify/utils";
@@ -7,12 +7,13 @@ import ReactTooltip from "react-tooltip";
 import { redColorScale } from "features/spotify/constants";
 import HeatMapLegend from "features/spotify/components/HeatMapLegend";
 
-const ArtistMonthsHeatMap = ({
-  artists,
-  startDate,
-  endDate,
-  showTooltip = true,
-}) => {
+const ArtistMonthsHeatMap = ({ artists, startDate, endDate }) => {
+  // Whole showTooltip issue seems related to next.js and SSR issue
+  // https://stackoverflow.com/questions/64079321/react-tooltip-and-next-js-ssr-issue
+  const [showTooltip, setShowTooltip] = useState(false);
+  useEffect(() => {
+    setShowTooltip(true);
+  }, []);
   const colorScaler = getColorScaler(artists);
   // clusters only contain the division between clusters, so we'll always be one short.
   // Assume 0 is not included in the first color so start count at one.
@@ -75,18 +76,7 @@ const ArtistMonthsHeatMap = ({
         <ReactTooltip
           id="artistMonth"
           getContent={(dataTip) => {
-            return (
-              <p
-                style={{
-                  backgroundColor: "white",
-                  padding: "10px",
-                  border: "1px solid black",
-                  fontSize: 16,
-                }}
-              >
-                {dataTip} songs played
-              </p>
-            );
+            return `${dataTip} songs played`;
           }}
         ></ReactTooltip>
       )}

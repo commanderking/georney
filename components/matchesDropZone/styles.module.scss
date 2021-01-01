@@ -1,6 +1,7 @@
 .wrapper {
   padding: 10px 50px;
-  background-color: $HINGE_PINK_COLOR;
+  background-color: lightgreen;
+  // background-color: $HINGE_PINK_COLOR;
   border-radius: 5px;
   border: 1px dashed black;
   margin: 5px;
@@ -9,6 +10,16 @@
   min-width: 300px;
   text-align: center;
   margin-top: 3rem;
+}
+
+.filesWrapper {
+  padding: 10px 50px;
+  border: 1px solid black;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  width: 80%;
+  min-width: 300px;
+  text-align: center;
 }
 
 .buttonWrapper {
@@ -26,6 +37,6 @@
 }
 
 .wrapper:hover {
-  background-color: lightpink;
+  background-color: greenyellow;
   border: 1px solid black;
 }
