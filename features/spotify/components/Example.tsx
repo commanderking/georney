@@ -1,7 +1,5 @@
 import React, { useMemo } from "react";
 import ArtistMonthsHeatMap from "features/spotify/components/ArtistMonthsHeatMap";
-import streamOne from "data/StreamingHistory0.json";
-import streamZero from "data/StreamingHistory1.json";
 
 import {
   getTrackCounts,
@@ -12,16 +10,21 @@ import {
 import ArtistTable from "features/spotify/components/ArtistTable";
 import TrackTable from "features/spotify/components/TrackTable";
 import styles from "../styles.module.scss";
+import { RawTrackStream } from "features/spotify/types";
+type Props = {
+  streams: RawTrackStream[];
+  /* By default, will use first date in data */
+  customStartDate?: Date;
+};
 
-export const SpotifyExample = () => {
-  const streams = [...streamZero, ...streamOne];
+export const SpotifyExample = ({ streams, customStartDate }: Props) => {
   const artists = useMemo(
     () => [...getStreamsByArtistName(streams)].slice(0, 100),
     []
   );
   const tracks = [...getTrackCounts(streams)].slice(0, 100);
 
-  const { endDate } = useMemo(() => getStartAndEndDate(streams), []);
+  const { startDate, endDate } = useMemo(() => getStartAndEndDate(streams), []);
 
   const topArtistStreams = useMemo(() => getTopArtistStreams(artists, 20), []);
 
@@ -30,7 +33,7 @@ export const SpotifyExample = () => {
       <ArtistMonthsHeatMap
         artists={topArtistStreams}
         // temporary - just for current visualization
-        startDate={new Date("2020-01-02")}
+        startDate={customStartDate || startDate}
         endDate={endDate}
       />
       <ArtistTable data={artists} />
