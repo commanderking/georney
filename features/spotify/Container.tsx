@@ -8,7 +8,7 @@ import { isArray } from "@material-ui/data-grid";
 import streamOne from "data/StreamingHistory0.json";
 import streamZero from "data/StreamingHistory1.json";
 import { GlobalContext } from "context/GlobalProvider";
-import Link from "next/Link";
+import Link from "next/link";
 import Button from "components/button/Button";
 
 const getHandleDrop = (setData, setError) => (acceptedFiles) => {

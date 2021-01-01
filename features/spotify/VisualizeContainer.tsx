@@ -6,7 +6,13 @@ const VisualizeContainer = () => {
   const { userSpotifyData, setUserSpotifyData } = useContext(GlobalContext);
 
   return (
-    <div>{userSpotifyData.length && <Example streams={userSpotifyData} />}</div>
+    <div>
+      {userSpotifyData.length ? (
+        <Example streams={userSpotifyData} />
+      ) : (
+        <div>No Data Yet</div>
+      )}
+    </div>
   );
 };
 
