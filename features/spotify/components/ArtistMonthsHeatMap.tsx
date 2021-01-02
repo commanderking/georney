@@ -39,7 +39,7 @@ const ArtistMonthsHeatMap = ({ artists, startDate, endDate }) => {
     <div className={styles.container}>
       <h3>Artist Play Frequency by Month ({titleDate})</h3>
       <p style={{ fontStyle: "italic" }}>
-        Your top 20 artists, sorted from most played artist to least
+        Your top 20 artists — starting with the overall most played artist
       </p>
       <div className={styles.chartArea}>
         <HeatMapLegend legendMap={legendData} />
