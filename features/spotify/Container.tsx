@@ -36,13 +36,11 @@ const getHandleDrop = (setData, setError) => (acceptedFiles) => {
 };
 
 const SpotifyContainer = () => {
-  const { userSpotifyData, setUserSpotifyData } = useContext(GlobalContext);
-
-  const [error, setError] = useState(null);
-
-  const [validFiles, setValidFiles] = useState<Blob[]>();
-
   const exampleStreams = [...streamZero, ...streamOne];
+
+  const { userSpotifyData, setUserSpotifyData } = useContext(GlobalContext);
+  const [error, setError] = useState(null);
+  const [validFiles, setValidFiles] = useState<Blob[]>();
 
   const isUploadDataValid = Boolean(
     validateStreamHistoryFiles(userSpotifyData) && userSpotifyData.length
@@ -51,7 +49,7 @@ const SpotifyContainer = () => {
   return (
     <div className={styles.container} style={{ minWidth: "600px" }}>
       <Head>
-        <title>Georney</title>
+        <title>Georney - Visualize Spotify Data</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -103,8 +101,6 @@ const SpotifyContainer = () => {
             </div>
           )}
         </div>
-        {/* {shouldVisualize && <Example streams={spotifyData} />} */}
-
         <h2>Example Visualizations</h2>
         <Example
           streams={exampleStreams}

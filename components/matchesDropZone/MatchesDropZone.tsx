@@ -66,11 +66,6 @@ const MatchesDropZone = ({
           ))}
         </div>
       </div>
-      // <div className={styles.buttonWrapper}>
-      //   <Link href="/visualize">
-      //     <button className={styles.button}>Visualize Data</button>
-      //   </Link>
-      // </div>
     );
   }
 

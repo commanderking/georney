@@ -8,7 +8,6 @@ type Props = {
 const HeatMapLegend = ({ legendMap }: Props) => {
   return (
     <div className={styles.container}>
-      {/* <h4>Legend - Play Count</h4> */}
       <div
         style={{ display: "inline-block", marginRight: "3px", color: "gray" }}
       >
@@ -25,10 +24,8 @@ const HeatMapLegend = ({ legendMap }: Props) => {
                 backgroundColor: legend.color,
                 border: "1px solid gray",
                 marginRight: "1px",
-                // display: "inline-block",
               }}
             ></div>
-            {/* <div className={styles.legendText}>{legend.displayText}</div> */}
           </div>
         );
       })}
