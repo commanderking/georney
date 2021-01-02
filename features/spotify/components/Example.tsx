@@ -32,7 +32,6 @@ export const SpotifyExample = ({ streams, customStartDate }: Props) => {
     <div className={styles.example}>
       <ArtistMonthsHeatMap
         artists={topArtistStreams}
-        // temporary - just for current visualization
         startDate={customStartDate || startDate}
         endDate={endDate}
       />
