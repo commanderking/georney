@@ -25,7 +25,6 @@ const getHandleDrop = (setData, setError) => (acceptedFiles) => {
 
           if (isArray(json)) {
             setError(null);
-            console.log("fileData", fileData);
             fileData = [...fileData, ...json];
             setData(fileData);
           }
@@ -40,6 +39,8 @@ const SpotifyContainer = () => {
   const { userSpotifyData, setUserSpotifyData } = useContext(GlobalContext);
 
   const [error, setError] = useState(null);
+
+  const [validFiles, setValidFiles] = useState<Blob[]>();
 
   const exampleStreams = [...streamZero, ...streamOne];
 
