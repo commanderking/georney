@@ -46,8 +46,6 @@ const MatchesDropZone = ({
     multiple: acceptsMultipleFiles,
   });
 
-  console.log("acceptedFiles", acceptedFiles);
-
   const getContent = () => {
     if (isDragActive) {
       return <p>Over here!!</p>;

@@ -9,7 +9,7 @@ const columns: ColDef[] = [
     valueGetter: (params) => params.rowIndex + 1,
     sortable: false,
   },
-  { field: "artistName", headerName: "Artist Name", flex: 4 },
+  { field: "artistName", headerName: "Artist Name", flex: 3 },
   {
     field: "playCount",
     headerName: "Play Count",
@@ -38,7 +38,7 @@ const sortModel = [{ field: "playCount", sort: "desc" as SortDirection }];
 
 const ArtistTable = ({ data }) => {
   return (
-    <div style={{ height: "700px", maxWidth: "800px", margin: "auto" }}>
+    <div style={{ height: "700px", maxWidth: "600px", margin: "auto" }}>
       <h3>Top 100 Artists (by Play Count)</h3>
 
       <DataGrid

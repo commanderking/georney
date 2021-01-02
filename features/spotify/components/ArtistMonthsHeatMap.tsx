@@ -39,6 +39,8 @@ const ArtistMonthsHeatMap = ({ artists, startDate, endDate }) => {
     <div className={styles.container}>
       <h3>Artist Play Frequency by Month ({titleDate})</h3>
       <div className={styles.chartArea}>
+        <HeatMapLegend legendMap={legendData} />
+
         <div className={styles.chartContainer}>
           {
             // blank div for grid
@@ -69,8 +71,6 @@ const ArtistMonthsHeatMap = ({ artists, startDate, endDate }) => {
             );
           })}
         </div>
-
-        <HeatMapLegend legendMap={legendData} />
       </div>
       {showTooltip && (
         <ReactTooltip

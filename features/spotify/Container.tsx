@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import Example from "features/spotify/components/Example";
 import styles from "features/hinge/styles.module.scss";
 import Head from "next/head";
@@ -47,9 +47,8 @@ const SpotifyContainer = () => {
     validateStreamHistoryFiles(userSpotifyData) && userSpotifyData.length
   );
 
-  console.log("userSpotifyData", userSpotifyData);
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ minWidth: "600px" }}>
       <Head>
         <title>Georney</title>
         <link rel="icon" href="/favicon.ico" />
@@ -105,6 +104,7 @@ const SpotifyContainer = () => {
         </div>
         {/* {shouldVisualize && <Example streams={spotifyData} />} */}
 
+        <h2>Example Visualizations</h2>
         <Example
           streams={exampleStreams}
           customStartDate={new Date("2020-01-02")}

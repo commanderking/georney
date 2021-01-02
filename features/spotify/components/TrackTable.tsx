@@ -23,7 +23,7 @@ const columns: ColDef[] = [
 
 const TrackTable = ({ data }) => {
   return (
-    <div style={{ height: "800px", maxWidth: "500px", margin: "auto" }}>
+    <div style={{ height: "800px", maxWidth: "600px", margin: "auto" }}>
       <h3>Most Played Songs</h3>
       <DataGrid
         autoHeight
