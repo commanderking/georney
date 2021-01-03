@@ -10,6 +10,7 @@ import streamZero from "data/StreamingHistory1.json";
 import { GlobalContext } from "context/GlobalProvider";
 import Link from "next/link";
 import Button from "components/button/Button";
+import spotifyStyles from "./styles.module.scss";
 
 const getHandleDrop = (setData, setError) => (acceptedFiles) => {
   if (acceptedFiles.length) {
@@ -58,12 +59,16 @@ const SpotifyContainer = () => {
           <h1 className={styles.title}>Visualize Your Spotify Data</h1>
           <DropZone
             acceptsMultipleFiles
-            textPreDrop={<p>Drop All StreamingHistory.json files here.</p>}
+            textPreDrop={
+              <p className={spotifyStyles.dropZoneText}>
+                Drop All StreamingHistory.json files here.
+              </p>
+            }
             onDrop={getHandleDrop(setUserSpotifyData, setError)}
           />
           {!isUploadDataValid && (
             <div>
-              <small className={styles.dropZoneText}>
+              <span>
                 File is NOT uploaded and is NEVER saved. Verify{" "}
                 <a
                   href="https://github.com/commanderking/georney"
@@ -72,9 +77,9 @@ const SpotifyContainer = () => {
                   the code
                 </a>
                 .
-              </small>
+              </span>
 
-              <p>
+              <p className={spotifyStyles.downloadData}>
                 Don't have your data?{" "}
                 <a
                   target="_blank"
