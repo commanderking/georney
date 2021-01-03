@@ -8,20 +8,33 @@ type Props = {
 const HeatMapLegend = ({ legendMap }: Props) => {
   return (
     <div className={styles.container}>
-      <h4>Legend - Play Count</h4>
+      <div
+        style={{ display: "inline-block", marginRight: "3px", color: "gray" }}
+      >
+        {" "}
+        Less{" "}
+      </div>
+
       {legendMap.map((legend) => {
         return (
-          <div key={legend.id}>
+          <div style={{ display: "inline-block" }} key={legend.id}>
             <div
               className={styles.legendIcon}
               style={{
                 backgroundColor: legend.color,
+                border: "1px solid gray",
+                marginRight: "1px",
               }}
             ></div>
-            <div className={styles.legendText}>{legend.displayText}</div>
           </div>
         );
       })}
+      <div
+        style={{ display: "inline-block", marginLeft: "3px", color: "gray" }}
+      >
+        {" "}
+        More{" "}
+      </div>
     </div>
   );
 };

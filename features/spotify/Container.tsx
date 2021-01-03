@@ -1,42 +1,117 @@
-import React from "react";
+import React, { useState, useContext } from "react";
+import Example from "features/spotify/components/Example";
+import styles from "features/hinge/styles.module.scss";
+import Head from "next/head";
+import DropZone from "components/matchesDropZone/MatchesDropZone";
+import { validateStreamHistoryFiles } from "./utils";
+import { isArray } from "@material-ui/data-grid";
 import streamOne from "data/StreamingHistory0.json";
 import streamZero from "data/StreamingHistory1.json";
-import {
-  getTrackCounts,
-  getStreamsByArtistName,
-  getTopArtistStreams,
-  getStartAndEndDate,
-} from "features/spotify/utils";
-import TrackTable from "features/spotify/components/TrackTable";
-import ArtistTable from "features/spotify/components/ArtistTable";
-import ArtistMonthsHeatMap from "features/spotify/components/ArtistMonthsHeatMap";
-import styles from "./styles.module.scss";
+import { GlobalContext } from "context/GlobalProvider";
+import Link from "next/link";
+import Button from "components/button/Button";
+import spotifyStyles from "./styles.module.scss";
+
+const getHandleDrop = (setData, setError) => (acceptedFiles) => {
+  if (acceptedFiles.length) {
+    let fileData = [];
+    for (const file of acceptedFiles) {
+      const reader = new FileReader();
+
+      reader.readAsText(file);
+
+      reader.onloadend = () => {
+        if (typeof reader.result === "string") {
+          const json = JSON.parse(reader.result);
+
+          if (isArray(json)) {
+            setError(null);
+            fileData = [...fileData, ...json];
+            setData(fileData);
+          }
+          setError("One of the files added is not streaming history");
+        }
+      };
+    }
+  }
+};
 
 const SpotifyContainer = () => {
-  const streams = [...streamZero, ...streamOne];
-  const tracks = getTrackCounts(streams);
-  const artists = getStreamsByArtistName(streams);
+  const exampleStreams = [...streamZero, ...streamOne];
 
-  const { startDate, endDate } = getStartAndEndDate(streams);
+  const { userSpotifyData, setUserSpotifyData } = useContext(GlobalContext);
+  const [error, setError] = useState(null);
+  const [validFiles, setValidFiles] = useState<Blob[]>();
 
-  const topArtistStreams = getTopArtistStreams(artists);
+  const isUploadDataValid = Boolean(
+    validateStreamHistoryFiles(userSpotifyData) && userSpotifyData.length
+  );
 
   return (
-    <div className={styles.container}>
-      <ArtistMonthsHeatMap
-        artists={topArtistStreams}
-        // temporary - just for current visualization
-        startDate={new Date("2020-01-02")}
-        endDate={endDate}
-      />
-      <ArtistTable data={artists} />
-      <TrackTable data={tracks} />
-      <a
-        target="_blank"
-        href="https://support.spotify.com/us/article/data-rights-and-privacy-settings/"
-      >
-        How to Download Data from Spotify
-      </a>
+    <div className={styles.container} style={{ minWidth: "600px" }}>
+      <Head>
+        <title>Georney - Visualize Spotify Data</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <main className={styles.main}>
+        <div className={styles.splash}>
+          <h1 className={styles.title}>Visualize Your Spotify Data</h1>
+          <DropZone
+            acceptsMultipleFiles
+            textPreDrop={
+              <p className={spotifyStyles.dropZoneText}>
+                Drop All StreamingHistory.json files here.
+              </p>
+            }
+            onDrop={getHandleDrop(setUserSpotifyData, setError)}
+          />
+          {!isUploadDataValid && (
+            <div>
+              <span>
+                File is NOT uploaded and is NEVER saved. Verify{" "}
+                <a
+                  href="https://github.com/commanderking/georney"
+                  target="_blank"
+                >
+                  the code
+                </a>
+                .
+              </span>
+
+              <p className={spotifyStyles.downloadData}>
+                Don't have your data?{" "}
+                <a
+                  target="_blank"
+                  href="https://support.spotify.com/us/article/data-rights-and-privacy-settings/"
+                >
+                  Download from Spotify
+                </a>
+              </p>
+            </div>
+          )}
+
+          {isUploadDataValid && (
+            <div>
+              <Button
+                onClick={() => {
+                  location.reload();
+                }}
+              >
+                Reselect Files
+              </Button>
+              <Link href="/spotify/visualize">
+                <Button>Visualize Data</Button>
+              </Link>
+            </div>
+          )}
+        </div>
+        <h2>Example Visualizations</h2>
+        <Example
+          streams={exampleStreams}
+          customStartDate={new Date("2020-01-02")}
+        />
+      </main>
     </div>
   );
 };

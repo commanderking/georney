@@ -9,6 +9,7 @@ import { formatData } from "components/timelineHeatMap/utils";
 import scaleCluster from "d3-scale-cluster";
 import { redColorScale } from "features/spotify/constants";
 import { LegendData } from "features/spotify/types";
+import { isArray } from "@material-ui/data-grid";
 
 export const getHoursAndMinutes = (milliseconds: number) => {
   const time = moment.duration(milliseconds);
@@ -75,8 +76,11 @@ const getArtistStreamData = (streams: RawTrackStream[]) => {
   );
 };
 
-export const getTopArtistStreams = (artists: ArtistStream[]) => {
-  return artists.slice(0, 25).map((artist) => {
+export const getTopArtistStreams = (
+  artists: ArtistStream[],
+  maxCount: number = 25
+) => {
+  return artists.slice(0, maxCount).map((artist) => {
     return {
       ...artist,
       formattedStreams: artist.allStreams.map((stream) => ({
@@ -196,5 +200,19 @@ export const getClustersLegendData = (
       range: [min, max],
       displayText: getDisplayText(min, max),
     };
+  });
+};
+
+export const validateStreamHistoryFiles = (streams: RawTrackStream[]) => {
+  if (!isArray(streams)) {
+    return false;
+  }
+  return streams.every((stream) => {
+    return Boolean(
+      stream.artistName &&
+        stream.endTime &&
+        stream.trackName &&
+        stream.msPlayed >= 0
+    );
   });
 };

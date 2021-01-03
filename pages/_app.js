@@ -1,5 +1,6 @@
 import "../styles/globals.scss";
 import UserMatchesProvider from "context/UserMatchesProvider";
+import GlobalProvider from "context/GlobalProvider";
 
 import { useEffect } from "react";
 import { useRouter } from "next/router";
@@ -18,9 +19,11 @@ function MyApp({ Component, pageProps }) {
     };
   }, [router.events]);
   return (
-    <UserMatchesProvider>
-      <Component {...pageProps} />
-    </UserMatchesProvider>
+    <GlobalProvider>
+      <UserMatchesProvider>
+        <Component {...pageProps} />
+      </UserMatchesProvider>
+    </GlobalProvider>
   );
 }
 
