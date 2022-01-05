@@ -7,10 +7,7 @@ const SpotifyExamplePage = () => {
 
   return (
     <div>
-      <SpotifyExample
-        streams={exampleStreams}
-        customStartDate={new Date("2020-01-02")}
-      />
+      <SpotifyExample streams={exampleStreams} />
     </div>
   );
 };

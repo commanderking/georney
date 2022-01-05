@@ -106,7 +106,11 @@ export const getStreamsByArtistName = (trackStreams: RawTrackStream[]) => {
   return sortedArtistStreams;
 };
 
-const getArtistsByMonth = (artists: TopArtistStream[], startDate, endDate) => {
+const getArtistsByMonth = (
+  artists: TopArtistStream[],
+  startDate: Date,
+  endDate: Date
+) => {
   const artistsByMonth = artists.map((artist) => {
     return formatData(artist.formattedStreams, {
       startDate,
@@ -120,8 +124,8 @@ const getArtistsByMonth = (artists: TopArtistStream[], startDate, endDate) => {
 // Flattens the values per month for understanding how to quantile the data
 const getAllMonthlyValues = (
   artists: TopArtistStream[],
-  startDate,
-  endDate
+  startDate: Date,
+  endDate: Date
 ) => {
   const artistsByMonth = getArtistsByMonth(artists, startDate, endDate);
   const initialValues: number[] = [];
@@ -160,8 +164,8 @@ const getAllMonthlyValues = (
 
 export const getColorScaler = (
   artists: TopArtistStream[],
-  startDate,
-  endDate
+  startDate: Date,
+  endDate: Date
 ) => {
   const allMonthlyValues = getAllMonthlyValues(
     artists,

@@ -5,8 +5,8 @@ import Head from "next/head";
 import DropZone from "components/matchesDropZone/MatchesDropZone";
 import { validateStreamHistoryFiles } from "./utils";
 import { isArray } from "@material-ui/data-grid";
-import streamOne from "data/2021_StreamingHistory0.json";
-import streamZero from "data/2021_StreamingHistory1.json";
+import streamOne from "data/StreamingHistory0.json";
+import streamZero from "data/StreamingHistory1.json";
 import { GlobalContext } from "context/GlobalProvider";
 import Link from "next/link";
 import Button from "components/button/Button";
@@ -107,10 +107,7 @@ const SpotifyContainer = () => {
           )}
         </div>
         <h2>Example Visualizations</h2>
-        <Example
-          streams={exampleStreams}
-          // customStartDate={new Date("2021-01-02")}
-        />
+        <Example streams={exampleStreams} />
       </main>
     </div>
   );
