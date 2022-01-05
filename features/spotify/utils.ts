@@ -106,11 +106,11 @@ export const getStreamsByArtistName = (trackStreams: RawTrackStream[]) => {
   return sortedArtistStreams;
 };
 
-const getArtistsByMonth = (artists: TopArtistStream[]) => {
+const getArtistsByMonth = (artists: TopArtistStream[], startDate, endDate) => {
   const artistsByMonth = artists.map((artist) => {
     return formatData(artist.formattedStreams, {
-      startDate: new Date("2020-01-01"),
-      endDate: new Date("2020-12-31"),
+      startDate,
+      endDate,
     });
   });
 
@@ -118,8 +118,12 @@ const getArtistsByMonth = (artists: TopArtistStream[]) => {
 };
 
 // Flattens the values per month for understanding how to quantile the data
-const getAllMonthlyValues = (artists: TopArtistStream[]) => {
-  const artistsByMonth = getArtistsByMonth(artists);
+const getAllMonthlyValues = (
+  artists: TopArtistStream[],
+  startDate,
+  endDate
+) => {
+  const artistsByMonth = getArtistsByMonth(artists, startDate, endDate);
   const initialValues: number[] = [];
   const allArtistsMonthlyStats = artistsByMonth.map((months) => {
     return months.reduce((allValues, currentMonth) => {
@@ -154,10 +158,16 @@ const getAllMonthlyValues = (artists: TopArtistStream[]) => {
 //   // return ["#F6BDC0", "#F07470", "#DC1C13", "#9A140D", "#580B08", "black"];
 // };
 
-export const getColorScaler = (artists: TopArtistStream[]) => {
-  const allMonthlyValues = getAllMonthlyValues(artists).filter(
-    (value) => value !== 0
-  );
+export const getColorScaler = (
+  artists: TopArtistStream[],
+  startDate,
+  endDate
+) => {
+  const allMonthlyValues = getAllMonthlyValues(
+    artists,
+    startDate,
+    endDate
+  ).filter((value) => value !== 0);
 
   // color scheme from - https://www.schemecolor.com/sample?getcolor=dc1c13
   return scaleCluster().domain(allMonthlyValues).range(redColorScale);
@@ -165,7 +175,11 @@ export const getColorScaler = (artists: TopArtistStream[]) => {
 
 export const getStartAndEndDate = (streams: RawTrackStream[]) => {
   const streamsOrderedByEndTime = _.sortBy(streams, "endTime");
-
+  console.log("streamsOrderedByEndTime", streamsOrderedByEndTime);
+  console.log("what", {
+    startDate: getStreamDate(_.first(streamsOrderedByEndTime)),
+    endDate: getStreamDate(_.last(streamsOrderedByEndTime)),
+  });
   return {
     startDate: getStreamDate(_.first(streamsOrderedByEndTime)),
     endDate: getStreamDate(_.last(streamsOrderedByEndTime)),

@@ -5,12 +5,15 @@ import _ from "lodash";
 import { scaleLinear } from "d3-scale";
 
 const getMonths = (startDate, endDate) => {
-  return timeMonths(timeMonth.floor(startDate), timeMonth.ceil(endDate)).map(
-    (monthDate) => ({
-      date: monthDate,
-      monthDate: moment(monthDate).format("YYYY-MM"),
-    })
-  );
+  const months = timeMonths(
+    timeMonth.floor(startDate),
+    timeMonth.ceil(endDate)
+  ).map((monthDate) => ({
+    date: monthDate,
+    monthDate: moment(monthDate).format("YYYY-MM"),
+  }));
+
+  return months;
 };
 
 export const getColorScaler = (maxValue: number) => {
