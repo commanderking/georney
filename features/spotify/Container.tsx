@@ -107,10 +107,7 @@ const SpotifyContainer = () => {
           )}
         </div>
         <h2>Example Visualizations</h2>
-        <Example
-          streams={exampleStreams}
-          customStartDate={new Date("2020-01-02")}
-        />
+        <Example streams={exampleStreams} />
       </main>
     </div>
   );

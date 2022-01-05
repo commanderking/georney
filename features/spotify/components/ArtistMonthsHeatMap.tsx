@@ -14,7 +14,7 @@ const ArtistMonthsHeatMap = ({ artists, startDate, endDate }) => {
   useEffect(() => {
     setShowTooltip(true);
   }, []);
-  const colorScaler = getColorScaler(artists);
+  const colorScaler = getColorScaler(artists, startDate, endDate);
   // clusters only contain the division between clusters, so we'll always be one short.
   // Assume 0 is not included in the first color so start count at one.
   const clusters = [1, ...colorScaler.clusters()];
@@ -44,7 +44,10 @@ const ArtistMonthsHeatMap = ({ artists, startDate, endDate }) => {
       <div className={styles.chartArea}>
         <HeatMapLegend legendMap={legendData} />
 
-        <div className={styles.chartContainer}>
+        <div
+          className={styles.chartContainer}
+          style={{ maxWidth: 550, overflowX: "scroll" }}
+        >
           {
             // blank div for grid
           }

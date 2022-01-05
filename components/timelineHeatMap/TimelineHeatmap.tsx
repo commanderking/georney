@@ -1,5 +1,5 @@
 import { DataPoint } from "./types";
-import { formatData, getColorScaler } from "./utils";
+import { formatData, getColorScaler, getSvgWidth } from "./utils";
 import moment from "moment";
 
 type Props = {
@@ -39,8 +39,13 @@ const TimelineHeatMap = ({
   const side = 25;
   const spacing = 2;
   const getX = (index: number) => side * index + spacing * index;
+
+  // svgWidth should be calculated outisde of TimelineHeatmap as it's consistent across all rows
+  // But this would require a refactor as of now where we'd want to paint the entire svg as one big svg, not for individual rows.
+  const svgWidth = getSvgWidth(startDate, endDate, side, spacing);
+
   return (
-    <svg width={350} height={25}>
+    <svg width={svgWidth} height={25}>
       {!isHeaderRow &&
         months.map((month, index) => {
           return (

@@ -13,11 +13,9 @@ import styles from "../styles.module.scss";
 import { RawTrackStream } from "features/spotify/types";
 type Props = {
   streams: RawTrackStream[];
-  /* By default, will use first date in data */
-  customStartDate?: Date;
 };
 
-export const SpotifyExample = ({ streams, customStartDate }: Props) => {
+export const SpotifyExample = ({ streams }: Props) => {
   const artists = useMemo(
     () => [...getStreamsByArtistName(streams)].slice(0, 100),
     []
@@ -32,7 +30,7 @@ export const SpotifyExample = ({ streams, customStartDate }: Props) => {
     <div className={styles.example}>
       <ArtistMonthsHeatMap
         artists={topArtistStreams}
-        startDate={customStartDate || startDate}
+        startDate={startDate}
         endDate={endDate}
       />
       <ArtistTable data={artists} />
