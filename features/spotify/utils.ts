@@ -175,11 +175,7 @@ export const getColorScaler = (
 
 export const getStartAndEndDate = (streams: RawTrackStream[]) => {
   const streamsOrderedByEndTime = _.sortBy(streams, "endTime");
-  console.log("streamsOrderedByEndTime", streamsOrderedByEndTime);
-  console.log("what", {
-    startDate: getStreamDate(_.first(streamsOrderedByEndTime)),
-    endDate: getStreamDate(_.last(streamsOrderedByEndTime)),
-  });
+
   return {
     startDate: getStreamDate(_.first(streamsOrderedByEndTime)),
     endDate: getStreamDate(_.last(streamsOrderedByEndTime)),

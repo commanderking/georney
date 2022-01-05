@@ -26,7 +26,6 @@ export const SpotifyExample = ({ streams }: Props) => {
 
   const topArtistStreams = useMemo(() => getTopArtistStreams(artists, 20), []);
 
-  console.log("topArtistStreams", topArtistStreams);
   return (
     <div className={styles.example}>
       <ArtistMonthsHeatMap

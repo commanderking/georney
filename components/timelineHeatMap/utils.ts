@@ -22,6 +22,11 @@ export const getColorScaler = (maxValue: number) => {
     .range(["white", "#F6BDC0", "#F1959B", "#F07470", " #EA4C46", "#DC1C13"]);
 };
 
+export const getSvgWidth = (startDate, endDate, rectLength, spacing) => {
+  const months = getMonths(startDate, endDate);
+  return months.length * (rectLength + spacing);
+};
+
 export const formatData = (
   rawData: DataPoint[],
   { startDate, endDate }: { startDate: Date; endDate: Date }
