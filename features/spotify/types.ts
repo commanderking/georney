@@ -39,3 +39,29 @@ export type LegendData = {
   range: [number, number | null];
   displayText: string;
 };
+
+// Streaming data form from extended streaming history data request
+export type ExtendedStream = {
+  conn_country: string;
+  episode_name: string | null;
+  episode_show_name: string | null;
+  incognito_mode: boolean;
+  ip_addr_decrypted: string;
+  master_metadata_album_album_name: string;
+  master_metadata_album_artist_name: string;
+  master_metadata_track_name: string;
+  ms_played: number;
+  offline: boolean;
+  offline_timestamp: number;
+  platform: string;
+  // Figure out what the enum reasons for better typing
+  reason_end: string;
+  reason_start: string;
+  shuffle: boolean;
+  skipped: boolean | null;
+  spotify_episode_uri: string | null;
+  spotify_track_uri: string;
+  ts: string;
+  user_agent_decrypted: string;
+  username: string;
+};
