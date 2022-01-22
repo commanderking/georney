@@ -54,14 +54,14 @@ export type ExtendedStream = {
   offline: boolean;
   offline_timestamp: number;
   platform: string;
-  // Figure out what the other reasons are and type better
-  reason_end: "trackdone";
-  reason_start: "trackdone";
+  // Figure out what the enum reasons for better typing
+  reason_end: string;
+  reason_start: string;
   shuffle: boolean;
   skipped: null;
   spotify_episode_uri: string | null;
-  spotify_track_uri: "spotify:track:3XCnva3zdUGf7h8SesB8e3";
+  spotify_track_uri: string;
   ts: string;
-  user_agent_decrypted: "unknown";
+  user_agent_decrypted: string;
   username: string;
 };
