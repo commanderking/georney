@@ -58,7 +58,7 @@ export type ExtendedStream = {
   reason_end: string;
   reason_start: string;
   shuffle: boolean;
-  skipped: null;
+  skipped: boolean | null;
   spotify_episode_uri: string | null;
   spotify_track_uri: string;
   ts: string;
