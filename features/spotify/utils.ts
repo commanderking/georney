@@ -2,6 +2,7 @@ import {
   RawTrackStream,
   ArtistStream,
   TopArtistStream,
+  ExtendedStream,
 } from "features/spotify/types";
 import _ from "lodash";
 import moment from "moment";
@@ -229,4 +230,20 @@ export const validateStreamHistoryFiles = (streams: RawTrackStream[]) => {
         stream.msPlayed >= 0
     );
   });
+};
+
+export const convertExtendedStreamToRawStream = (
+  extendedStream: ExtendedStream[]
+): RawTrackStream[] => {
+  return extendedStream
+    .map((stream) => {
+      return {
+        // Technically, we should add ms to this for the endtime, but close enough!
+        endTime: stream.ts,
+        artistName: stream.master_metadata_album_artist_name,
+        trackName: stream.master_metadata_track_name,
+        msPlayed: stream.ms_played,
+      };
+    })
+    .filter((stream) => stream.artistName && stream.trackName);
 };

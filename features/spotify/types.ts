@@ -39,3 +39,29 @@ export type LegendData = {
   range: [number, number | null];
   displayText: string;
 };
+
+// Streaming data form from extended streaming history data request
+export type ExtendedStream = {
+  conn_country: string;
+  episode_name: string | null;
+  episode_show_name: string | null;
+  incognito_mode: boolean;
+  ip_addr_decrypted: string;
+  master_metadata_album_album_name: string;
+  master_metadata_album_artist_name: string;
+  master_metadata_track_name: string;
+  ms_played: number;
+  offline: boolean;
+  offline_timestamp: number;
+  platform: string;
+  // Figure out what the other reasons are and type better
+  reason_end: "trackdone";
+  reason_start: "trackdone";
+  shuffle: boolean;
+  skipped: null;
+  spotify_episode_uri: string | null;
+  spotify_track_uri: "spotify:track:3XCnva3zdUGf7h8SesB8e3";
+  ts: string;
+  user_agent_decrypted: "unknown";
+  username: string;
+};
