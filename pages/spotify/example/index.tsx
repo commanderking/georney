@@ -8,6 +8,7 @@ import {
   processInitialData,
   convertExtendedStreamToRawStream,
   getStreamsByYear,
+  getStreamCountsPerMonth,
 } from "features/spotify/utils";
 
 const SpotifyExamplePage = () => {
@@ -25,7 +26,8 @@ const SpotifyExamplePage = () => {
   );
 
   const byYear = getStreamsByYear(extendedStreams);
-  console.log({ byYear });
+  const byMonthYear = getStreamCountsPerMonth(extendedStreams);
+  console.log({ byMonthYear });
 
   return (
     <div>

@@ -259,3 +259,49 @@ export const getStreamsByYear = (streams: TrackStream[]) => {
     return new Date(stream.endTime).getFullYear();
   });
 };
+
+export const getStreamCountsPerMonth = (streams: TrackStream[]) => {
+  const streamsByMonth = _.groupBy(streams, (stream: TrackStream) => {
+    const date = new Date(stream.endTime);
+    const monthYear = `${date.getFullYear()}-${date.getMonth()}`;
+
+    return monthYear;
+  });
+
+  console.log({ streamsByMonth });
+
+  return _.mapValues(streamsByMonth, (streamsByMonthYear) => {
+    const byArtistTrackNameStreams = _.groupBy(
+      streamsByMonthYear,
+      (stream: TrackStream) => stream.id
+    );
+
+    const byArtistTrackNameCounts = _.mapValues(
+      byArtistTrackNameStreams,
+      (streams: TrackStream[]) => {
+        const { id, artistName, trackName } = streams[0];
+
+        const totalMsPlayed = streams.reduce((total, currentStream) => {
+          return (total += currentStream.msPlayed);
+        }, 0);
+
+        return {
+          id,
+          artistName,
+          trackName,
+          msPlayed: totalMsPlayed,
+          count: streams.length,
+          datesPlayed: streams.map((stream) => stream.endTime),
+        };
+      }
+    );
+
+    return byArtistTrackNameCounts;
+  });
+};
+
+export const getTopFiveSongsPerPeriod = (streams: TrackStream[]) => {
+  const streamCountsByMonth = getStreamCountsPerMonth(streams);
+
+  return _.mapValues(streamCountsByMonth, (streamsByMonthYear) => {});
+};
