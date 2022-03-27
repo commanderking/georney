@@ -1,5 +1,6 @@
 import {
   RawTrackStream,
+  TrackStream,
   ArtistStream,
   TopArtistStream,
   ExtendedStream,
@@ -25,21 +26,19 @@ const getStreamDate = (stream: RawTrackStream) => {
   return new Date(stream.endTime.split(" ")[0]);
 };
 
-const getTrackArtistKey = (track) => {
-  const { trackName, artistName } = track;
+const getTrackArtistKey = (trackName: string, artistName: string) => {
   return `${trackName.split(" ").join("_")}_${artistName.split(" ").join("_")}`;
 };
 
-const processInitialData = (trackStreams: RawTrackStream[]) => {
+export const processInitialData = (trackStreams: RawTrackStream[]) => {
   return trackStreams.map((track) => ({
     ...track,
-    id: getTrackArtistKey(track),
+    id: getTrackArtistKey(track.trackName, track.artistName),
   }));
 };
 
 const getTracksByTrackName = (trackStreams: RawTrackStream[]) => {
-  const processedTracks = processInitialData(trackStreams);
-  const tracksById = _.groupBy(processedTracks, "id");
+  const tracksById = _.groupBy(trackStreams, "id");
   return tracksById;
 };
 
@@ -234,16 +233,75 @@ export const validateStreamHistoryFiles = (streams: RawTrackStream[]) => {
 
 export const convertExtendedStreamToRawStream = (
   extendedStream: ExtendedStream[]
-): RawTrackStream[] => {
+): TrackStream[] => {
   return extendedStream
+    .filter(
+      (stream) =>
+        stream.master_metadata_album_artist_name &&
+        stream.master_metadata_track_name
+    )
     .map((stream) => {
+      const trackName = stream.master_metadata_track_name;
+      const artistName = stream.master_metadata_album_artist_name;
       return {
+        id: getTrackArtistKey(trackName, artistName),
         // Technically, we should add ms to this for the endtime, but close enough!
         endTime: stream.ts,
-        artistName: stream.master_metadata_album_artist_name,
-        trackName: stream.master_metadata_track_name,
+        artistName,
+        trackName,
         msPlayed: stream.ms_played,
       };
-    })
-    .filter((stream) => stream.artistName && stream.trackName);
+    });
+};
+
+export const getStreamsByYear = (streams: TrackStream[]) => {
+  return _.groupBy(streams, (stream: TrackStream) => {
+    return new Date(stream.endTime).getFullYear();
+  });
+};
+
+export const getStreamCountsPerMonth = (streams: TrackStream[]) => {
+  const streamsByMonth = _.groupBy(streams, (stream: TrackStream) => {
+    const date = new Date(stream.endTime);
+    const monthYear = `${date.getFullYear()}-${date.getMonth()}`;
+
+    return monthYear;
+  });
+
+  console.log({ streamsByMonth });
+
+  return _.mapValues(streamsByMonth, (streamsByMonthYear) => {
+    const byArtistTrackNameStreams = _.groupBy(
+      streamsByMonthYear,
+      (stream: TrackStream) => stream.id
+    );
+
+    const byArtistTrackNameCounts = _.mapValues(
+      byArtistTrackNameStreams,
+      (streams: TrackStream[]) => {
+        const { id, artistName, trackName } = streams[0];
+
+        const totalMsPlayed = streams.reduce((total, currentStream) => {
+          return (total += currentStream.msPlayed);
+        }, 0);
+
+        return {
+          id,
+          artistName,
+          trackName,
+          msPlayed: totalMsPlayed,
+          count: streams.length,
+          datesPlayed: streams.map((stream) => stream.endTime),
+        };
+      }
+    );
+
+    return byArtistTrackNameCounts;
+  });
+};
+
+export const getTopFiveSongsPerPeriod = (streams: TrackStream[]) => {
+  const streamCountsByMonth = getStreamCountsPerMonth(streams);
+
+  return _.mapValues(streamCountsByMonth, (streamsByMonthYear) => {});
 };

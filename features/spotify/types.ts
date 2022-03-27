@@ -7,7 +7,7 @@ export type RawTrackStream = {
 
 export type TrackStream = {
   // Without an id from spotify data, this is our best attempt for a unique identifier
-  trackArtistKey: string;
+  id: string;
   endTime: string;
   artistName: string;
   trackName: string;
