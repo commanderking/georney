@@ -1,6 +1,7 @@
 import "../styles/globals.scss";
 import UserMatchesProvider from "context/UserMatchesProvider";
 import GlobalProvider from "context/GlobalProvider";
+import { ChakraProvider } from "@chakra-ui/react";
 
 import { useEffect } from "react";
 import { useRouter } from "next/router";
@@ -21,7 +22,9 @@ function MyApp({ Component, pageProps }) {
   return (
     <GlobalProvider>
       <UserMatchesProvider>
-        <Component {...pageProps} />
+        <ChakraProvider>
+          <Component {...pageProps} />
+        </ChakraProvider>
       </UserMatchesProvider>
     </GlobalProvider>
   );

@@ -70,7 +70,7 @@ const getArtistStreamData = (streams: RawTrackStream[]) => {
       playCount: 0,
       msPlayed: 0,
       artistName: streams[0].artistName,
-      trackNames: new Set(),
+      trackNames: new Set<string>(),
       allStreams: streams,
     }
   );

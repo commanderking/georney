@@ -130,6 +130,7 @@ export const formatCalendarActivities = (
   });
 
   const allActivities = _.flatten(flattened)
+    // @ts-ignore - need to figure out what happened here. Seems like flattening is making us lose types
     .filter(activityFilter)
     .map((activity) => {
       return {

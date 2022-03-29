@@ -60,27 +60,29 @@ export const isChatFromReceivedLike = (activity: RawActivity) =>
 export const isMeetingFromSentLike = (activity: RawActivity) =>
   hasMet(activity) && isSuccessfulLike(activity);
 
-const getMatchesForConditionCreator = (
-  filter: (activity: RawActivity) => number | boolean,
-  type: ActivityType,
-  timestampGetter: (activity: RawActivity) => Date | undefined
-) => (activities: RawActivity[]) => {
-  const filteredMatches = activities.filter(filter);
+const getMatchesForConditionCreator =
+  (
+    filter: (activity: RawActivity) => number | boolean,
+    type: ActivityType,
+    timestampGetter: (activity: RawActivity) => Date | undefined
+  ) =>
+  (activities: RawActivity[]) => {
+    const filteredMatches = activities.filter(filter);
 
-  const matchesOfType = filteredMatches.map((match) => {
-    const date = timestampGetter(match) || new Date();
+    const matchesOfType = filteredMatches.map((match) => {
+      const date = timestampGetter(match) || new Date();
 
-    return {
-      type,
-      year: date.getFullYear(),
-      month: date.getMonth(),
-      yearMonth: `${date.getMonth() + 1}/${date.getFullYear()}`,
-      timestamp: timestampGetter(match),
-    };
-  });
+      return {
+        type,
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        yearMonth: `${date.getMonth() + 1}/${date.getFullYear()}`,
+        timestamp: timestampGetter(match),
+      };
+    });
 
-  return _.groupBy(matchesOfType, "yearMonth");
-};
+    return _.groupBy(matchesOfType, "yearMonth");
+  };
 
 const getTimeOfMatch = (activity: RawActivity) =>
   activity.match && new Date(activity.match[0].timestamp);
@@ -133,14 +135,14 @@ export const getTimeAxis = (matches: RawActivity[]) => {
   return result;
 };
 
-const getDataPoint = (matchesByTime: _.Dictionary<MatchTypeWithTime[]>) => (
-  timePeriod: string
-) => {
-  return {
-    x: timePeriod,
-    y: (matchesByTime[timePeriod] && matchesByTime[timePeriod].length) || 0,
+const getDataPoint =
+  (matchesByTime: _.Dictionary<MatchTypeWithTime[]>) =>
+  (timePeriod: string) => {
+    return {
+      x: timePeriod,
+      y: (matchesByTime[timePeriod] && matchesByTime[timePeriod].length) || 0,
+    };
   };
-};
 
 const getDataSet = (
   activityTypes: _.Dictionary<MatchTypeWithTime[]>[],
@@ -253,26 +255,28 @@ export const getMeetingFromReceivedLike = (activities: RawActivity[]) => {
   return activities.filter(isMeetingFromReceivedLike);
 };
 
-const getActivityByTimeCreator = (
-  filter: (activity: Activity) => number | boolean,
-  timestampGetter: (activity: Activity) => Date | undefined
-) => (activities: Activity[]) => {
-  const filteredMatches = activities.filter(filter);
+const getActivityByTimeCreator =
+  (
+    filter: (activity: Activity) => number | boolean,
+    timestampGetter: (activity: Activity) => Date | undefined
+  ) =>
+  (activities: Activity[]) => {
+    const filteredMatches = activities.filter(filter);
 
-  const matchesOfType = filteredMatches.map((activity) => {
-    const date = timestampGetter(activity) || new Date();
+    const matchesOfType = filteredMatches.map((activity) => {
+      const date = timestampGetter(activity) || new Date();
 
-    return {
-      ...activity,
-      year: date.getFullYear(),
-      month: date.getMonth(),
-      yearMonth: `${date.getMonth() + 1}/${date.getFullYear()}`,
-      timestamp: activity.timestamp,
-    };
-  });
+      return {
+        ...activity,
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        yearMonth: `${date.getMonth() + 1}/${date.getFullYear()}`,
+        timestamp: activity.timestamp,
+      };
+    });
 
-  return _.groupBy(matchesOfType, "yearMonth");
-};
+    return _.groupBy(matchesOfType, "yearMonth");
+  };
 
 const getSuccessfulLikesByTime = getActivityByTimeCreator(
   isSuccessfulLike,
@@ -293,9 +297,8 @@ const getBlocksByTime = getActivityByTimeCreator(isBlock, getTimeOfBlock);
 
 export const getMatchesByTime = (activities: Activity[]) => {
   const successfulLikesByTime = getSuccessfulLikesByTime(activities);
-  const matchesFromReceivedLikesByTime = getMatchesFromReceivedLikesByTime(
-    activities
-  );
+  const matchesFromReceivedLikesByTime =
+    getMatchesFromReceivedLikesByTime(activities);
   const unsuccesfulLikesByTime = getUnsuccessfulLikesByTime(activities);
   const blocksByTime = getBlocksByTime(activities);
 
@@ -679,6 +682,7 @@ export const formatCalendarActivities = (
 ) => {
   const flattened = activities.map((activity) => {
     const values = Object.values(activity);
+    // @ts-ignore - figure out why flattend values seem to lose typing
     return _.flatten(values);
   });
 
