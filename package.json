@@ -20,6 +20,7 @@
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@nivo/calendar": "^0.63.1",
     "@nivo/sankey": "^0.63.1",
+    "@types/lodash": "^4.14.181",
     "@types/material-ui": "^0.21.8",
     "d3-array": "^2.9.1",
     "d3-scale": "^3.2.3",

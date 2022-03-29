@@ -20,7 +20,7 @@ export type ArtistStream = {
   msPlayed: number;
   artistName: string;
   trackNames: Set<string>;
-  allStreams: TrackStream[];
+  allStreams: RawTrackStream[];
 };
 
 export type TopArtistStream = ArtistStream & {
