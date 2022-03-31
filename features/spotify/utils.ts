@@ -4,6 +4,8 @@ import {
   ArtistStream,
   TopArtistStream,
   ExtendedStream,
+  MonthlyTrackStream,
+  MonthlyData,
 } from "features/spotify/types";
 import _ from "lodash";
 import moment from "moment";
@@ -260,7 +262,7 @@ export const getStreamsByYear = (streams: TrackStream[]) => {
   });
 };
 
-const getStreamCountsPerMonth = (streams: TrackStream[]) => {
+const getStreamingDataByMonthAndId = (streams: TrackStream[]) => {
   const streamsByMonth = _.groupBy(streams, (stream: TrackStream) => {
     const date = new Date(stream.endTime);
     const monthYear = `${date.getFullYear()}-${date.getMonth()}`;
@@ -299,40 +301,37 @@ const getStreamCountsPerMonth = (streams: TrackStream[]) => {
 };
 
 export const formatMilliseconds = (milliseconds: number) => {
-  const minutes = milliseconds / 60000;
-
   const oneMinute = 1000 * 60;
   const oneHour = oneMinute * 60;
   const oneDay = oneHour * 24;
-
   const duration = moment.duration(milliseconds);
 
   if (milliseconds > oneDay) {
     return `${duration.days()}d ${duration.hours()}hr`;
   }
-
   if (milliseconds > oneHour) {
     return `${duration.hours()}hr ${duration.minutes()}min`;
   }
-
   if (milliseconds > oneMinute) {
     return `${duration.minutes()}min`;
   }
-
   return `${duration.seconds()}s`;
 };
 
-export const getYearlySongData = (streams: TrackStream[]) => {
-  const streamCountsByMonth = getStreamCountsPerMonth(streams);
+export const getMonthlyStreamingData = (streams: TrackStream[]) => {
+  const streamingDatabyMonthAndId = getStreamingDataByMonthAndId(streams);
 
-  const streamsPerMonthYear = _.mapValues(
-    streamCountsByMonth,
+  const allTracksAndTimePlayed = _.mapValues(
+    streamingDatabyMonthAndId,
     (streamsByMonthYear) => {
       const tracks = Object.values(streamsByMonthYear);
 
-      const topFiveTracksSorted = _.sortBy(tracks, ["count", "msPlayed"]);
+      const sortedTracks: MonthlyTrackStream[] = _.sortBy(tracks, [
+        "count",
+        "msPlayed",
+      ]);
 
-      const monthlyData = topFiveTracksSorted.reduce(
+      const monthlyData = sortedTracks.reduce(
         (monthlyTotals, currentTrack) => {
           const { allTracks, totalTimePlayed } = monthlyTotals;
 
@@ -352,20 +351,23 @@ export const getYearlySongData = (streams: TrackStream[]) => {
     }
   );
 
-  const monthlyTracksAggregates = [];
-  _.forEach(streamsPerMonthYear, (value, key) => {
+  const monthlyData: MonthlyData[] = [];
+  _.each(allTracksAndTimePlayed, (value, key) => {
     const splitDate = key.split("-");
     const displayDate = `${moment(Number(splitDate[1]) + 1, "MM").format(
       "MMMM"
     )}, ${splitDate[0]}`;
-    monthlyTracksAggregates.push({
+
+    const monthlyData: MonthlyData = {
       ...value,
       totalTimePlayed: value.totalTimePlayed,
       totalTimePlayedDisplay: formatMilliseconds(value.totalTimePlayed),
       monthYear: key,
       displayDate,
-    });
+    };
+
+    monthlyData.push(monthlyData);
   });
 
-  return _.sortBy(monthlyTracksAggregates, ["monthYear"]);
+  return _.sortBy(monthlyData, ["monthYear"]);
 };

@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 
-import { getYearlySongData } from "features/spotify/utils";
+import { getMonthlyStreamingData } from "features/spotify/utils";
 import { TrackStream } from "features/spotify/types";
 import { formatMilliseconds } from "features/spotify/utils";
 
@@ -18,17 +18,22 @@ type Props = {
 };
 
 const MonthlyTopFive = ({ streams }: Props) => {
-  const yearlySongData = getYearlySongData(streams);
+  const yearlySongData = getMonthlyStreamingData(streams);
 
-  const [currentIndex, setCurentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const displayDate = yearlySongData[currentIndex].displayDate;
 
   const currentMonth = yearlySongData[currentIndex];
   const topFive = currentMonth.allTracks.slice(-5).reverse();
 
-  console.log({ topFive });
+  const nextMonth = () => {
+    setCurrentIndex(currentIndex + 1);
+  };
 
-  console.log({ yearlySongData });
+  const pastMonth = () => {
+    setCurrentIndex(currentIndex - 1);
+  };
+
   return (
     <Box>
       <Center py={6}>
@@ -41,44 +46,30 @@ const MonthlyTopFive = ({ streams }: Props) => {
           p={6}
           overflow={"hidden"}
         >
-          <Box
-            h={"210px"}
-            bg={"gray.100"}
-            mt={-6}
-            mx={-6}
-            mb={6}
-            pos={"relative"}
-          >
-            {displayDate}
+          <Box h={"100px"} bg={"gray.100"} mt={-6} mx={-6} mb={6}>
+            <Heading textAlign="center">{displayDate}</Heading>
           </Box>
-          {/* <Stack>
-            <Text
-              color={"green.500"}
-              textTransform={"uppercase"}
-              fontWeight={800}
-              fontSize={"sm"}
-              letterSpacing={1.1}
-            >
-              Blog
-            </Text>
-            <Heading
-              color={useColorModeValue("gray.700", "white")}
-              fontSize={"2xl"}
-              fontFamily={"body"}
-            >
-              Boost your conversion rate
-            </Heading>
-            <Text color={"gray.500"}>
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-              nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-              erat, sed diam voluptua. At vero eos et accusam et justo duo
-              dolores et ea rebum.
-            </Text>
-          </Stack> */}
+          <Stack direction="row" spacing={8}>
+            <Stack spacing={0}>
+              <Text>Play Time: </Text>
+              <Text fontWeight={800}>
+                {currentMonth.totalTimePlayedDisplay}
+              </Text>
+            </Stack>
+            <Stack spacing={0}>
+              <Text> # Unique Songs</Text>
+              <Text fontWeight={800}>{currentMonth.allTracks.length}</Text>
+            </Stack>
+          </Stack>
           {topFive.map((track, index) => {
-            console.log({ track });
             return (
-              <Stack mt={6} direction={"row"} spacing={4} align={"center"}>
+              <Stack
+                key={track.id}
+                mt={6}
+                direction={"row"}
+                spacing={4}
+                align={"center"}
+              >
                 <Text>#{index + 1}</Text>
                 <Avatar name={track.artistName} />
                 <Stack direction={"column"} spacing={0} fontSize={"sm"}>
