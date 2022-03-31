@@ -260,15 +260,13 @@ export const getStreamsByYear = (streams: TrackStream[]) => {
   });
 };
 
-export const getStreamCountsPerMonth = (streams: TrackStream[]) => {
+const getStreamCountsPerMonth = (streams: TrackStream[]) => {
   const streamsByMonth = _.groupBy(streams, (stream: TrackStream) => {
     const date = new Date(stream.endTime);
     const monthYear = `${date.getFullYear()}-${date.getMonth()}`;
 
     return monthYear;
   });
-
-  console.log({ streamsByMonth });
 
   return _.mapValues(streamsByMonth, (streamsByMonthYear) => {
     const byArtistTrackNameStreams = _.groupBy(
@@ -300,8 +298,74 @@ export const getStreamCountsPerMonth = (streams: TrackStream[]) => {
   });
 };
 
-export const getTopFiveSongsPerPeriod = (streams: TrackStream[]) => {
+export const formatMilliseconds = (milliseconds: number) => {
+  const minutes = milliseconds / 60000;
+
+  const oneMinute = 1000 * 60;
+  const oneHour = oneMinute * 60;
+  const oneDay = oneHour * 24;
+
+  const duration = moment.duration(milliseconds);
+
+  if (milliseconds > oneDay) {
+    return `${duration.days()}d ${duration.hours()}hr`;
+  }
+
+  if (milliseconds > oneHour) {
+    return `${duration.hours()}hr ${duration.minutes()}min`;
+  }
+
+  if (milliseconds > oneMinute) {
+    return `${duration.minutes()}min`;
+  }
+
+  return `${duration.seconds()}s`;
+};
+
+export const getYearlySongData = (streams: TrackStream[]) => {
   const streamCountsByMonth = getStreamCountsPerMonth(streams);
 
-  return _.mapValues(streamCountsByMonth, (streamsByMonthYear) => {});
+  const streamsPerMonthYear = _.mapValues(
+    streamCountsByMonth,
+    (streamsByMonthYear) => {
+      const tracks = Object.values(streamsByMonthYear);
+
+      const topFiveTracksSorted = _.sortBy(tracks, ["count", "msPlayed"]);
+
+      const monthlyData = topFiveTracksSorted.reduce(
+        (monthlyTotals, currentTrack) => {
+          const { allTracks, totalTimePlayed } = monthlyTotals;
+
+          return {
+            ...monthlyTotals,
+            allTracks: [...allTracks, currentTrack],
+            totalTimePlayed: totalTimePlayed + currentTrack.msPlayed,
+          };
+        },
+        {
+          allTracks: [],
+          totalTimePlayed: 0,
+        }
+      );
+
+      return monthlyData;
+    }
+  );
+
+  const monthlyTracksAggregates = [];
+  _.forEach(streamsPerMonthYear, (value, key) => {
+    const splitDate = key.split("-");
+    const displayDate = `${moment(Number(splitDate[1]) + 1, "MM").format(
+      "MMMM"
+    )}, ${splitDate[0]}`;
+    monthlyTracksAggregates.push({
+      ...value,
+      totalTimePlayed: value.totalTimePlayed,
+      totalTimePlayedDisplay: formatMilliseconds(value.totalTimePlayed),
+      monthYear: key,
+      displayDate,
+    });
+  });
+
+  return _.sortBy(monthlyTracksAggregates, ["monthYear"]);
 };

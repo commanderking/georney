@@ -8,8 +8,8 @@ import {
   processInitialData,
   convertExtendedStreamToRawStream,
   getStreamsByYear,
-  getStreamCountsPerMonth,
 } from "features/spotify/utils";
+import MonthlyTopFive from "features/spotify/components/MonthlyTopFive";
 
 const SpotifyExamplePage = () => {
   const exampleStreams = processInitialData([...streamZero, ...streamOne]);
@@ -25,12 +25,9 @@ const SpotifyExamplePage = () => {
     ])
   );
 
-  const byYear = getStreamsByYear(extendedStreams);
-  const byMonthYear = getStreamCountsPerMonth(extendedStreams);
-  console.log({ byMonthYear });
-
   return (
     <div>
+      <MonthlyTopFive streams={extendedStreams} />
       <SpotifyExample streams={exampleStreams} />
       <SpotifyExample streams={extendedStreams} />
     </div>
