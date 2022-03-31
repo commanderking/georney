@@ -358,7 +358,7 @@ export const getMonthlyStreamingData = (streams: TrackStream[]) => {
       "MMMM"
     )}, ${splitDate[0]}`;
 
-    const monthlyData: MonthlyData = {
+    const data: MonthlyData = {
       ...value,
       totalTimePlayed: value.totalTimePlayed,
       totalTimePlayedDisplay: formatMilliseconds(value.totalTimePlayed),
@@ -366,7 +366,7 @@ export const getMonthlyStreamingData = (streams: TrackStream[]) => {
       displayDate,
     };
 
-    monthlyData.push(monthlyData);
+    monthlyData.push(data);
   });
 
   return _.sortBy(monthlyData, ["monthYear"]);
