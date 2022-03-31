@@ -65,3 +65,20 @@ export type ExtendedStream = {
   user_agent_decrypted: string;
   username: string;
 };
+
+export type MonthlyTrackStream = {
+  id: string;
+  artistName: string;
+  trackName: string;
+  msPlayed: number;
+  count: number;
+  datesPlayed: string[];
+};
+
+export type MonthlyData = {
+  totalTimePlayed: number;
+  totalTimePlayedDisplay: string;
+  monthYear: string;
+  displayDate: string;
+  allTracks: MonthlyTrackStream[];
+};
