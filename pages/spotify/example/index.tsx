@@ -1,3 +1,5 @@
+import { Button } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import SpotifyExample from "features/spotify/components/Example";
 import streamOne from "data/StreamingHistory0.json";
 import streamZero from "data/StreamingHistory1.json";
@@ -7,11 +9,54 @@ import extendedHistory2 from "data/extendedHistory/endsong_2.json";
 import {
   processInitialData,
   convertExtendedStreamToRawStream,
-  getStreamsByYear,
 } from "features/spotify/utils";
 import MonthlyTopFive from "features/spotify/components/MonthlyTopFive";
+import { useSession, signIn, signOut } from "next-auth/react";
+
+const getToken = async () => {
+  const response = await fetch("/api/spotify/token");
+  return await response.json();
+};
+
+const searchMusic = async (token: string) => {
+  // const response = await fetch("/api/spotify/search", {
+  //   method: "POST",
+  //   body: JSON.stringify({
+  //     token,
+  //   }),
+  // });
+
+  var options = {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    json: true,
+  };
+
+  const response = await fetch(
+    "https://api.spotify.com/v1/search?q=Jolin+Tsai&type=track",
+    options
+  );
+
+  const json = await response.json();
+
+  console.log({ json });
+};
 
 const SpotifyExamplePage = () => {
+  const { data: session } = useSession();
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    if (session && !token) {
+      const body = getToken().then((response) => {
+        console.log(response);
+        setToken(response.access_token);
+        searchMusic(response.access_token);
+      });
+    }
+  }, [session]);
+
   const exampleStreams = processInitialData([...streamZero, ...streamOne]);
 
   const extendedStreams = processInitialData(
@@ -25,9 +70,29 @@ const SpotifyExamplePage = () => {
     ])
   );
 
+  console.log({ session });
+  console.log({ token });
   return (
     <div>
       <MonthlyTopFive streams={extendedStreams} />
+      {!session && (
+        <Button
+          onClick={() => {
+            signIn();
+          }}
+        >
+          Login with Spotify
+        </Button>
+      )}
+      {session && (
+        <Button
+          onClick={() => {
+            signOut();
+          }}
+        >
+          Logout of Spotify
+        </Button>
+      )}
       <SpotifyExample streams={exampleStreams} />
       <SpotifyExample streams={extendedStreams} />
     </div>
