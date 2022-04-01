@@ -11,6 +11,7 @@ import ArtistTable from "features/spotify/components/ArtistTable";
 import TrackTable from "features/spotify/components/TrackTable";
 import styles from "../styles.module.scss";
 import { RawTrackStream } from "features/spotify/types";
+
 type Props = {
   streams: RawTrackStream[];
 };
@@ -33,6 +34,7 @@ export const SpotifyExample = ({ streams }: Props) => {
         startDate={startDate}
         endDate={endDate}
       />
+
       <ArtistTable data={artists} />
       <TrackTable data={tracks} />
     </div>

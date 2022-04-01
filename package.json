@@ -31,10 +31,12 @@
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "next": "12",
+    "next-auth": "^4.3.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.2.2",
     "react-tooltip": "^4.2.11",
+    "request": "^2.88.2",
     "sass": "^1.28.0"
   },
   "devDependencies": {

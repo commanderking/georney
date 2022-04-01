@@ -2,6 +2,7 @@ import "../styles/globals.scss";
 import UserMatchesProvider from "context/UserMatchesProvider";
 import GlobalProvider from "context/GlobalProvider";
 import { ChakraProvider } from "@chakra-ui/react";
+import { SessionProvider } from "next-auth/react";
 
 import { useEffect } from "react";
 import { useRouter } from "next/router";
@@ -20,13 +21,15 @@ function MyApp({ Component, pageProps }) {
     };
   }, [router.events]);
   return (
-    <GlobalProvider>
-      <UserMatchesProvider>
-        <ChakraProvider>
-          <Component {...pageProps} />
-        </ChakraProvider>
-      </UserMatchesProvider>
-    </GlobalProvider>
+    <SessionProvider>
+      <GlobalProvider>
+        <UserMatchesProvider>
+          <ChakraProvider>
+            <Component {...pageProps} />
+          </ChakraProvider>
+        </UserMatchesProvider>
+      </GlobalProvider>
+    </SessionProvider>
   );
 }
 
