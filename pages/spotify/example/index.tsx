@@ -19,28 +19,17 @@ const getToken = async () => {
 };
 
 const searchMusic = async (token: string) => {
-  // const response = await fetch("/api/spotify/search", {
-  //   method: "POST",
-  //   body: JSON.stringify({
-  //     token,
-  //   }),
-  // });
-
   var options = {
     headers: {
       Authorization: "Bearer " + token,
     },
     json: true,
   };
-
   const response = await fetch(
     "https://api.spotify.com/v1/search?q=Jolin+Tsai&type=track",
     options
   );
-
   const json = await response.json();
-
-  console.log({ json });
 };
 
 const SpotifyExamplePage = () => {
@@ -70,8 +59,6 @@ const SpotifyExamplePage = () => {
     ])
   );
 
-  console.log({ session });
-  console.log({ token });
   return (
     <div>
       <MonthlyTopFive streams={extendedStreams} />
