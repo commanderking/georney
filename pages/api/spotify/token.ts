@@ -20,7 +20,6 @@ export default function handler(req, res) {
 
   request.post(authOptions, async (error, response, body) => {
     if (!error && response.statusCode === 200) {
-      console.log({ body });
       await res.status(200).json(body);
     }
 
