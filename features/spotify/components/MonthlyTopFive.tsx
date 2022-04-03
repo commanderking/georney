@@ -8,8 +8,9 @@ import {
   Avatar,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
+import SpotifyEmbed from "components/SpotifyEmbed";
 import { getMonthlyStreamingData } from "features/spotify/utils";
 import { TrackStream } from "features/spotify/types";
 import { formatMilliseconds } from "features/spotify/utils";
@@ -20,7 +21,7 @@ type Props = {
 };
 
 const searchMusic = async (token: string, searchQueries: string[]) => {
-  var options = {
+  const options = {
     headers: {
       Authorization: "Bearer " + token,
     },
@@ -38,6 +39,7 @@ const searchMusic = async (token: string, searchQueries: string[]) => {
 };
 
 const MonthlyTopFive = ({ streams, token }: Props) => {
+  const audioRef = useRef();
   const [trackIds, setTrackIds] = useState(null);
 
   const yearlySongData = getMonthlyStreamingData(streams);
@@ -47,6 +49,10 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
 
   const currentMonth = yearlySongData[currentIndex];
   const topFive = currentMonth.allTracks.slice(-5).reverse();
+
+  const [audioSrc, setAudioSrc] = useState(
+    "https://p.scdn.co/mp3-preview/8445d3124130d367c7092eb57fdd984d92b9dcc1?cid=c5a0af91f38c4399a8567fdaa1f23571"
+  );
 
   const nextMonth = () => {
     setCurrentIndex(currentIndex + 1);
@@ -76,6 +82,17 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
 
   return (
     <Box>
+      <Button onClick={() => audioRef.current.play()}>Play</Button>
+      <Button
+        onClick={() => {
+          setAudioSrc(null);
+          setAudioSrc(
+            "https://p.scdn.co/mp3-preview/3e165af7b66b9dfcd5604c204d0ba57453c0a13b?cid=c5a0af91f38c4399a8567fdaa1f23571"
+          );
+        }}
+      >
+        Change songs
+      </Button>
       <Button
         onClick={() => {
           setTrackIds(null);
@@ -84,6 +101,7 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
       >
         Next
       </Button>
+      <audio ref={audioRef} src={audioSrc} autoPlay></audio>
       <Center py={6}>
         <Box
           maxW={"445px"}
@@ -121,7 +139,7 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
                 minHeight={75}
               >
                 <Text>#{index + 1}</Text>
-                {/* <Avatar name={track.artistName} /> */}
+                <Avatar name={track.artistName} />
                 <Stack
                   direction={"column"}
                   spacing={0}
@@ -135,16 +153,7 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
                   </Text>
                 </Stack>
                 <Box>
-                  {trackIds && (
-                    <iframe
-                      style={{ transform: "scale(0.75)" }}
-                      src={`https://open.spotify.com/embed/track/${trackIds[index]}?utm_source=generator`}
-                      width="80px"
-                      height="80px"
-                      frameBorder="0"
-                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    ></iframe>
-                  )}
+                  {trackIds && <SpotifyEmbed trackId={trackIds[index]} />}
                 </Box>
               </Stack>
             );
