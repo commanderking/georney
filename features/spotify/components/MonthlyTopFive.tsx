@@ -34,8 +34,6 @@ const searchMusic = async (token: string, searchQueries: string[]) => {
   const responses = await Promise.all(urls);
   const jsons = await Promise.all(responses.map((response) => response.json()));
 
-  console.log({ jsons });
-
   return jsons;
 };
 
@@ -75,8 +73,6 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
       });
     }
   }, [token, currentIndex]);
-
-  console.log({ trackIds });
 
   return (
     <Box>

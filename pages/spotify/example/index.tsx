@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import SpotifyExample from "features/spotify/components/Example";
 import streamOne from "data/StreamingHistory0.json";
 import streamZero from "data/StreamingHistory1.json";
@@ -25,7 +25,6 @@ const SpotifyExamplePage = () => {
   useEffect(() => {
     if (session && !token) {
       const body = getToken().then((response) => {
-        console.log(response);
         setToken(response.access_token);
       });
     }
