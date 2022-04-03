@@ -39,7 +39,7 @@ const searchMusic = async (token: string, searchQueries: string[]) => {
 };
 
 const MonthlyTopFive = ({ streams, token }: Props) => {
-  const audioRef = useRef();
+  const audioRef = useRef<HTMLAudioElement>();
   const [trackIds, setTrackIds] = useState(null);
 
   const yearlySongData = getMonthlyStreamingData(streams);
@@ -80,9 +80,17 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
     }
   }, [token, currentIndex]);
 
+  console.log({ audioRef });
+
   return (
     <Box>
-      <Button onClick={() => audioRef.current.play()}>Play</Button>
+      <Button
+        onClick={() => {
+          audioRef && audioRef.current.play();
+        }}
+      >
+        Play
+      </Button>
       <Button
         onClick={() => {
           setAudioSrc(null);
