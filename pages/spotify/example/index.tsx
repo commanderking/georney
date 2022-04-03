@@ -18,20 +18,6 @@ const getToken = async () => {
   return await response.json();
 };
 
-const searchMusic = async (token: string) => {
-  var options = {
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-    json: true,
-  };
-  const response = await fetch(
-    "https://api.spotify.com/v1/search?q=Jolin+Tsai&type=track",
-    options
-  );
-  const json = await response.json();
-};
-
 const SpotifyExamplePage = () => {
   const { data: session } = useSession();
   const [token, setToken] = useState(null);
@@ -39,9 +25,7 @@ const SpotifyExamplePage = () => {
   useEffect(() => {
     if (session && !token) {
       const body = getToken().then((response) => {
-        console.log(response);
         setToken(response.access_token);
-        searchMusic(response.access_token);
       });
     }
   }, [session]);
@@ -61,7 +45,8 @@ const SpotifyExamplePage = () => {
 
   return (
     <div>
-      <MonthlyTopFive streams={extendedStreams} />
+      <MonthlyTopFive streams={extendedStreams} token={token} />
+
       {!session && (
         <Button
           onClick={() => {
