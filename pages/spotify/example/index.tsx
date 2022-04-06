@@ -1,4 +1,3 @@
-import { Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import SpotifyExample from "features/spotify/components/Example";
 import streamOne from "data/StreamingHistory0.json";
@@ -10,7 +9,6 @@ import {
   processInitialData,
   convertExtendedStreamToRawStream,
 } from "features/spotify/utils";
-import MonthlyTopFive from "features/spotify/components/MonthlyTopFive";
 import { useSession, signIn, signOut } from "next-auth/react";
 
 const getToken = async () => {
@@ -45,26 +43,6 @@ const SpotifyExamplePage = () => {
 
   return (
     <div>
-      <MonthlyTopFive streams={extendedStreams} token={token} />
-
-      {!session && (
-        <Button
-          onClick={() => {
-            signIn();
-          }}
-        >
-          Login with Spotify
-        </Button>
-      )}
-      {session && (
-        <Button
-          onClick={() => {
-            signOut();
-          }}
-        >
-          Logout of Spotify
-        </Button>
-      )}
       <SpotifyExample streams={exampleStreams} />
       <SpotifyExample streams={extendedStreams} />
     </div>
