@@ -6,6 +6,7 @@ import {
   ExtendedStream,
   MonthlyTrackStream,
   MonthlyData,
+  SpotifySearchResult,
 } from "features/spotify/types";
 import _ from "lodash";
 import moment from "moment";
@@ -370,4 +371,16 @@ export const getMonthlyStreamingData = (streams: TrackStream[]) => {
   });
 
   return _.sortBy(monthlyData, ["monthYear"]);
+};
+
+export const getPreviewTrackData = (spotifySearch: SpotifySearchResult) => {
+  if (spotifySearch.tracks.items.length === 0) {
+    return null;
+  }
+  const { id, preview_url } = spotifySearch.tracks.items[0];
+
+  return {
+    id,
+    previewUrl: preview_url,
+  };
 };
