@@ -13,3 +13,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 ### Add environment variables from Spotify
 
 See .env.example for required variables needed for spotify login
+
+### Trying to understand preview_url
+
+- https://community.spotify.com/t5/Spotify-for-Developers/preview-url-doesn-t-give-an-url-anymore/td-p/5056986

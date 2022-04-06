@@ -10,9 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect, useRef } from "react";
 
-import SpotifyEmbed from "components/SpotifyEmbed";
-import { getMonthlyStreamingData } from "features/spotify/utils";
-import { TrackStream } from "features/spotify/types";
+import {
+  getMonthlyStreamingData,
+  getPreviewTrackData,
+} from "features/spotify/utils";
+import { TrackStream, SpotifySearchResult } from "features/spotify/types";
 import { formatMilliseconds } from "features/spotify/utils";
 
 type Props = {
@@ -40,7 +42,9 @@ const searchMusic = async (token: string, searchQueries: string[]) => {
 
 const MonthlyTopFive = ({ streams, token }: Props) => {
   const audioRef = useRef<HTMLAudioElement>();
-  const [trackIds, setTrackIds] = useState(null);
+
+  const [beginAudio, setBeginAudio] = useState(false);
+  const [previewTracks, setPreviewTracks] = useState([]);
 
   const yearlySongData = getMonthlyStreamingData(streams);
 
@@ -50,9 +54,7 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
   const currentMonth = yearlySongData[currentIndex];
   const topFive = currentMonth.allTracks.slice(-5).reverse();
 
-  const [audioSrc, setAudioSrc] = useState(
-    "https://p.scdn.co/mp3-preview/8445d3124130d367c7092eb57fdd984d92b9dcc1?cid=c5a0af91f38c4399a8567fdaa1f23571"
-  );
+  const [audioSrc, setAudioSrc] = useState(null);
 
   const nextMonth = () => {
     setCurrentIndex(currentIndex + 1);
@@ -71,103 +73,110 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
     });
 
     if (token) {
-      searchMusic(token, searchQueries).then((results) => {
-        const trackIds = results.map((result) => {
-          return result?.tracks?.items[0]?.id;
-        });
-        setTrackIds(trackIds);
-      });
+      searchMusic(token, searchQueries).then(
+        (results: SpotifySearchResult[]) => {
+          const previewTracks = results.map((result) => {
+            return getPreviewTrackData(result);
+          });
+          setPreviewTracks(previewTracks);
+          setAudioSrc(previewTracks[0].previewUrl);
+
+          const consecutivePlayTimeout = setTimeout(() => {
+            setCurrentIndex(currentIndex + 1);
+          }, 15000);
+        }
+      );
     }
   }, [token, currentIndex]);
 
-  console.log({ audioRef });
+  console.log({ previewTracks });
+  console.log({ audioSrc });
 
   return (
     <Box>
-      <Button
-        onClick={() => {
-          audioRef && audioRef.current.play();
-        }}
-      >
-        Play
-      </Button>
-      <Button
-        onClick={() => {
-          setAudioSrc(null);
-          setAudioSrc(
-            "https://p.scdn.co/mp3-preview/3e165af7b66b9dfcd5604c204d0ba57453c0a13b?cid=c5a0af91f38c4399a8567fdaa1f23571"
-          );
-        }}
-      >
-        Change songs
-      </Button>
-      <Button
-        onClick={() => {
-          setTrackIds(null);
-          nextMonth();
-        }}
-      >
-        Next
-      </Button>
-      <audio ref={audioRef} src={audioSrc} autoPlay></audio>
-      <Center py={6}>
-        <Box
-          maxW={"445px"}
-          w={"full"}
-          bg={useColorModeValue("white", "gray.900")}
-          boxShadow={"2xl"}
-          rounded={"md"}
-          p={6}
-          overflow={"hidden"}
-        >
-          <Box h={"100px"} bg={"gray.100"} mt={-6} mx={-6} mb={6}>
-            <Heading textAlign="center">{displayDate}</Heading>
-          </Box>
-          <Stack direction="row" spacing={4}>
-            <Stack spacing={0}>
-              <Text>Play Time: </Text>
-              <Text fontWeight={800}>
-                {currentMonth.totalTimePlayedDisplay}
-              </Text>
-            </Stack>
-            <Stack spacing={0}>
-              <Text> # Unique Songs</Text>
-              <Text fontWeight={800}>{currentMonth.allTracks.length}</Text>
-            </Stack>
-          </Stack>
-          <Stack></Stack>
-          {topFive.map((track, index) => {
-            return (
-              <Stack
-                key={track.id}
-                mt={2}
-                direction={"row"}
-                spacing={4}
-                align={"center"}
-                minHeight={75}
+      <Box>
+        <audio ref={audioRef} src={audioSrc} autoPlay></audio>
+        <Center py={6}>
+          <Box
+            maxW={"445px"}
+            w={"full"}
+            bg={useColorModeValue("white", "gray.900")}
+            boxShadow={"2xl"}
+            rounded={"md"}
+            p={6}
+            overflow={"hidden"}
+          >
+            {!beginAudio && (
+              <Button
+                zIndex={20}
+                onClick={() => {
+                  setBeginAudio(true);
+                  audioRef && audioRef.current.play();
+                }}
               >
-                <Text>#{index + 1}</Text>
-                <Avatar name={track.artistName} />
-                <Stack
-                  direction={"column"}
-                  spacing={0}
-                  fontSize={"sm"}
-                  width="60%"
-                >
-                  <Text fontWeight={600}>{track.trackName}</Text>
-                  <Text fontWeight={400}>{track.artistName}</Text>
-                  <Text color={"gray.500"}>
-                    {track.count} plays ({formatMilliseconds(track.msPlayed)})
-                  </Text>
-                </Stack>
-                <Box>
-                  {trackIds && <SpotifyEmbed trackId={trackIds[index]} />}
+                Play History
+              </Button>
+            )}
+
+            {
+              <Box
+                opacity={beginAudio ? 1 : 0.3}
+                filter={beginAudio ? "" : "blur(0.2rem)"}
+              >
+                <Box h={"100px"} bg={"gray.100"} mt={-6} mx={-6} mb={6}>
+                  <Heading textAlign="center">{displayDate}</Heading>
                 </Box>
-              </Stack>
-            );
-          })}
-        </Box>
-      </Center>
+                <Stack direction="row" spacing={4}>
+                  <Stack spacing={0}>
+                    <Text>Play Time: </Text>
+                    <Text fontWeight={800}>
+                      {currentMonth.totalTimePlayedDisplay}
+                    </Text>
+                  </Stack>
+                  <Stack spacing={0}>
+                    <Text> # Unique Songs</Text>
+                    <Text fontWeight={800}>
+                      {currentMonth.allTracks.length}
+                    </Text>
+                  </Stack>
+                </Stack>
+                <Stack></Stack>
+                {topFive.map((track, index) => {
+                  return (
+                    <Stack
+                      key={track.id}
+                      mt={2}
+                      direction={"row"}
+                      spacing={4}
+                      align={"center"}
+                      minHeight={75}
+                    >
+                      <Text>#{index + 1}</Text>
+                      <Avatar name={track.artistName} />
+                      <Stack
+                        direction={"column"}
+                        spacing={0}
+                        fontSize={"sm"}
+                        width="60%"
+                      >
+                        <Text fontWeight={600}>{track.trackName}</Text>
+                        <Text fontWeight={400}>{track.artistName}</Text>
+                        <Text color={"gray.500"}>
+                          {track.count} plays (
+                          {formatMilliseconds(track.msPlayed)})
+                        </Text>
+                      </Stack>
+                      {/* <Box>
+                  {trackIds && <SpotifyEmbed trackId={trackIds[index]} />}
+                </Box> */}
+                    </Stack>
+                  );
+                })}
+              </Box>
+            }
+          </Box>
+        </Center>
+      </Box>
     </Box>
   );
 };
