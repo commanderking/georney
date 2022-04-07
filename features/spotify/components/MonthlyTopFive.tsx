@@ -9,6 +9,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useState, useEffect, useRef } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 import {
   getMonthlyStreamingData,
@@ -42,6 +43,7 @@ const searchMusic = async (token: string, searchQueries: string[]) => {
 
 const MonthlyTopFive = ({ streams, token }: Props) => {
   const audioRef = useRef<HTMLAudioElement>();
+  const { data: session } = useSession();
 
   const [beginAudio, setBeginAudio] = useState(false);
   const [previewTracks, setPreviewTracks] = useState([]);
@@ -81,21 +83,27 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
           setPreviewTracks(previewTracks);
           setAudioSrc(previewTracks[0].previewUrl);
 
-          const consecutivePlayTimeout = setTimeout(() => {
-            setCurrentIndex(currentIndex + 1);
-          }, 15000);
+          if (beginAudio) {
+            const consecutivePlayTimeout = setTimeout(() => {
+              setCurrentIndex(currentIndex + 1);
+            }, 15000);
+          }
         }
       );
     }
-  }, [token, currentIndex]);
+  }, [token, currentIndex, beginAudio]);
 
   console.log({ previewTracks });
   console.log({ audioSrc });
 
+  const playHistoryText = session
+    ? "Play History"
+    : "View Spotify History (without audio)";
+
   return (
     <Box>
       <Box>
-        <audio ref={audioRef} src={audioSrc} autoPlay></audio>
+        <audio ref={audioRef} src={beginAudio && audioSrc} autoPlay></audio>
         <Center py={6}>
           <Box
             maxW={"445px"}
@@ -107,15 +115,28 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
             overflow={"hidden"}
           >
             {!beginAudio && (
-              <Button
-                zIndex={20}
-                onClick={() => {
-                  setBeginAudio(true);
-                  audioRef && audioRef.current.play();
-                }}
-              >
-                Play History
-              </Button>
+              <Box zIndex={20}>
+                Login with Spotify is required for audio playback.
+                {!session && (
+                  <Button
+                    zIndex={20}
+                    onClick={() => {
+                      signIn();
+                    }}
+                  >
+                    Login with Spotify
+                  </Button>
+                )}
+                <Button
+                  zIndex={20}
+                  onClick={() => {
+                    setBeginAudio(true);
+                    audioRef && audioRef.current.play();
+                  }}
+                >
+                  {playHistoryText}
+                </Button>
+              </Box>
             )}
 
             {
@@ -166,9 +187,6 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
                           {formatMilliseconds(track.msPlayed)})
                         </Text>
                       </Stack>
-                      {/* <Box>
-                  {trackIds && <SpotifyEmbed trackId={trackIds[index]} />}
-                </Box> */}
                     </Stack>
                   );
                 })}
