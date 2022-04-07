@@ -370,7 +370,13 @@ export const getMonthlyStreamingData = (streams: TrackStream[]) => {
     monthlyData.push(data);
   });
 
-  return _.sortBy(monthlyData, ["monthYear"]);
+  return _.sortBy(monthlyData, (data) => {
+    // BLAH - hacky way to sort month/year
+    const splitMonthYear = data.monthYear.split("-");
+    const sortingDate =
+      Number(splitMonthYear[0]) * 100 + Number(splitMonthYear[1]);
+    return sortingDate;
+  });
 };
 
 export const getPreviewTrackData = (spotifySearch: SpotifySearchResult) => {

@@ -50,13 +50,15 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
 
   const yearlySongData = getMonthlyStreamingData(streams);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // TODO: UPDATE TO 0 - JUST SICK OF LISTENING TO SAME SONG
+  const [currentIndex, setCurrentIndex] = useState(40);
   const displayDate = yearlySongData[currentIndex].displayDate;
 
   const currentMonth = yearlySongData[currentIndex];
   const topFive = currentMonth.allTracks.slice(-5).reverse();
 
   const [audioSrc, setAudioSrc] = useState(null);
+  const [currentlyPlayingIndex, setCurrentlyPlayingIndex] = useState(null);
 
   const nextMonth = () => {
     setCurrentIndex(currentIndex + 1);
@@ -81,7 +83,17 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
             return getPreviewTrackData(result);
           });
           setPreviewTracks(previewTracks);
-          setAudioSrc(previewTracks[0].previewUrl);
+
+          const validIndex = previewTracks.findIndex((previewTrack) =>
+            Boolean(previewTrack.previewUrl)
+          );
+
+          const previewUrl = validIndex > -1 && previewTracks[validIndex];
+          if (previewUrl) {
+            setAudioSrc(previewTracks[validIndex].previewUrl);
+          }
+
+          setCurrentlyPlayingIndex(validIndex);
 
           if (beginAudio) {
             const consecutivePlayTimeout = setTimeout(() => {
@@ -93,8 +105,10 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
     }
   }, [token, currentIndex, beginAudio]);
 
-  console.log({ previewTracks });
-  console.log({ audioSrc });
+  console.log({ yearlySongData });
+
+  // console.log({ previewTracks });
+  // console.log({ audioSrc });
 
   const playHistoryText = session
     ? "Play History"
@@ -115,10 +129,13 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
             overflow={"hidden"}
           >
             {!beginAudio && (
-              <Box zIndex={20}>
-                Login with Spotify is required for audio playback.
+              <Box zIndex={20} backgroundColor="lightgreen" padding={3}>
+                Take a trip down memory lane with your top songs played for each
+                month. Logging in with Spotify is required for audio playback.
                 {!session && (
                   <Button
+                    mt={4}
+                    display="block"
                     zIndex={20}
                     onClick={() => {
                       signIn();
@@ -128,7 +145,10 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
                   </Button>
                 )}
                 <Button
+                  display="block"
+                  mt={4}
                   zIndex={20}
+                  colorScheme="teal"
                   onClick={() => {
                     setBeginAudio(true);
                     audioRef && audioRef.current.play();
@@ -147,9 +167,9 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
                 <Box h={"100px"} bg={"gray.100"} mt={-6} mx={-6} mb={6}>
                   <Heading textAlign="center">{displayDate}</Heading>
                 </Box>
-                <Stack direction="row" spacing={4}>
+                <Stack direction="row" spacing={8}>
                   <Stack spacing={0}>
-                    <Text>Play Time: </Text>
+                    <Text>Monthly Play Time </Text>
                     <Text fontWeight={800}>
                       {currentMonth.totalTimePlayedDisplay}
                     </Text>
@@ -171,6 +191,11 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
                       spacing={4}
                       align={"center"}
                       minHeight={75}
+                      backgroundColor={
+                        index === currentlyPlayingIndex ? "lightgreen" : ""
+                      }
+                      borderRadius={10}
+                      padding={2}
                     >
                       <Text>#{index + 1}</Text>
                       <Avatar name={track.artistName} />
