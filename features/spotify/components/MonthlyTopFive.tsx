@@ -50,8 +50,7 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
 
   const yearlySongData = getMonthlyStreamingData(streams);
 
-  // TODO: UPDATE TO 0 - JUST SICK OF LISTENING TO SAME SONG
-  const [currentIndex, setCurrentIndex] = useState(40);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const displayDate = yearlySongData[currentIndex].displayDate;
 
   const currentMonth = yearlySongData[currentIndex];
