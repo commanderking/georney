@@ -7,7 +7,10 @@ import {
   Stack,
   Avatar,
   useColorModeValue,
+  Checkbox,
 } from "@chakra-ui/react";
+import { motion } from "framer-motion";
+
 import { useState, useEffect, useRef } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 
@@ -22,6 +25,8 @@ type Props = {
   streams: TrackStream[];
   token: string | null;
 };
+
+const playTime = 15000;
 
 const searchMusic = async (token: string, searchQueries: string[]) => {
   const options = {
@@ -42,30 +47,21 @@ const searchMusic = async (token: string, searchQueries: string[]) => {
 };
 
 const MonthlyTopFive = ({ streams, token }: Props) => {
-  const audioRef = useRef<HTMLAudioElement>();
-  const { data: session } = useSession();
-
-  const [beginAudio, setBeginAudio] = useState(false);
-  const [previewTracks, setPreviewTracks] = useState([]);
-
   const yearlySongData = getMonthlyStreamingData(streams);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const displayDate = yearlySongData[currentIndex].displayDate;
-
   const currentMonth = yearlySongData[currentIndex];
   const topFive = currentMonth.allTracks.slice(-5).reverse();
 
+  const audioRef = useRef<HTMLAudioElement>();
+  const { data: session } = useSession();
+
+  const [beginAudio, setBeginAudio] = useState(false);
   const [audioSrc, setAudioSrc] = useState(null);
   const [currentlyPlayingIndex, setCurrentlyPlayingIndex] = useState(null);
 
-  const nextMonth = () => {
-    setCurrentIndex(currentIndex + 1);
-  };
-
-  const pastMonth = () => {
-    setCurrentIndex(currentIndex - 1);
-  };
+  const [randomizeTopFive, setRandomizeTopFive] = useState(false);
 
   useEffect(() => {
     const searchQueries = topFive.map((song) => {
@@ -78,14 +74,26 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
     if (token) {
       searchMusic(token, searchQueries).then(
         (results: SpotifySearchResult[]) => {
+          setCurrentlyPlayingIndex(null);
           const previewTracks = results.map((result) => {
             return getPreviewTrackData(result);
           });
-          setPreviewTracks(previewTracks);
 
-          const validIndex = previewTracks.findIndex((previewTrack) =>
-            Boolean(previewTrack.previewUrl)
-          );
+          let validIndex = null;
+          if (randomizeTopFive) {
+            const randomIndex = Math.round(
+              Math.random() * (previewTracks.length - 1)
+            );
+
+            validIndex = previewTracks[randomIndex]?.previewUrl
+              ? randomIndex
+              : null;
+          }
+          if (!validIndex) {
+            validIndex = previewTracks.findIndex((previewTrack) =>
+              Boolean(previewTrack.previewUrl)
+            );
+          }
 
           const previewUrl = validIndex > -1 && previewTracks[validIndex];
           if (previewUrl) {
@@ -97,17 +105,14 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
           if (beginAudio) {
             const consecutivePlayTimeout = setTimeout(() => {
               setCurrentIndex(currentIndex + 1);
-            }, 15000);
+            }, playTime);
+
+            return () => clearInterval(consecutivePlayTimeout);
           }
         }
       );
     }
   }, [token, currentIndex, beginAudio]);
-
-  console.log({ yearlySongData });
-
-  // console.log({ previewTracks });
-  // console.log({ audioSrc });
 
   const playHistoryText = session
     ? "Play History"
@@ -116,7 +121,11 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
   return (
     <Box>
       <Box>
-        <audio ref={audioRef} src={beginAudio && audioSrc} autoPlay></audio>
+        <audio
+          ref={audioRef}
+          src={beginAudio ? audioSrc : ""}
+          autoPlay={audioSrc ? true : false}
+        ></audio>
         <Center py={6}>
           <Box
             maxW={"445px"}
@@ -150,11 +159,19 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
                   colorScheme="teal"
                   onClick={() => {
                     setBeginAudio(true);
-                    audioRef && audioRef.current.play();
                   }}
                 >
                   {playHistoryText}
                 </Button>
+                <Box>Options</Box>
+                <Checkbox
+                  checked={randomizeTopFive}
+                  onChange={() => {
+                    setRandomizeTopFive(!randomizeTopFive);
+                  }}
+                >
+                  Randomize Song Played
+                </Checkbox>
               </Box>
             )}
 
@@ -182,36 +199,57 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
                 </Stack>
                 <Stack></Stack>
                 {topFive.map((track, index) => {
+                  const isCurrentlyPlaying = index === currentlyPlayingIndex;
                   return (
-                    <Stack
+                    <Box
                       key={track.id}
-                      mt={2}
-                      direction={"row"}
-                      spacing={4}
-                      align={"center"}
-                      minHeight={75}
-                      backgroundColor={
-                        index === currentlyPlayingIndex ? "lightgreen" : ""
-                      }
-                      borderRadius={10}
-                      padding={2}
+                      backgroundColor={isCurrentlyPlaying ? "lightgreen" : ""}
                     >
-                      <Text>#{index + 1}</Text>
-                      <Avatar name={track.artistName} />
                       <Stack
-                        direction={"column"}
-                        spacing={0}
-                        fontSize={"sm"}
-                        width="60%"
+                        as={motion.div}
+                        opacity={0}
+                        animate={{ opacity: 1 }}
+                        transition="1s linear"
+                        key={track.id}
+                        mt={2}
+                        direction={"row"}
+                        spacing={4}
+                        align={"center"}
+                        minHeight={75}
+                        borderRadius={10}
+                        padding={2}
                       >
-                        <Text fontWeight={600}>{track.trackName}</Text>
-                        <Text fontWeight={400}>{track.artistName}</Text>
-                        <Text color={"gray.500"}>
-                          {track.count} plays (
-                          {formatMilliseconds(track.msPlayed)})
-                        </Text>
+                        <Text>#{index + 1}</Text>
+                        <Avatar name={track.artistName} />
+                        <Stack
+                          direction={"column"}
+                          spacing={0}
+                          fontSize={"sm"}
+                          width="60%"
+                        >
+                          <Text fontWeight={600}>{track.trackName}</Text>
+                          <Text fontWeight={400}>{track.artistName}</Text>
+                          <Text color={"gray.500"}>
+                            {track.count} plays (
+                            {formatMilliseconds(track.msPlayed)})
+                          </Text>
+                        </Stack>
                       </Stack>
-                    </Stack>
+                      {isCurrentlyPlaying && (
+                        <Box
+                          as={motion.div}
+                          backgroundColor="black"
+                          width={0}
+                          height={1}
+                          animate={
+                            beginAudio && currentlyPlayingIndex !== null
+                              ? { width: "100%" }
+                              : { width: 0 }
+                          }
+                          transition="14.7s linear"
+                        ></Box>
+                      )}
+                    </Box>
                   );
                 })}
               </Box>
