@@ -6,7 +6,6 @@ import {
   Text,
   Stack,
   Avatar,
-  Progress,
   useColorModeValue,
   Checkbox,
 } from "@chakra-ui/react";
@@ -48,19 +47,17 @@ const searchMusic = async (token: string, searchQueries: string[]) => {
 };
 
 const MonthlyTopFive = ({ streams, token }: Props) => {
-  const audioRef = useRef<HTMLAudioElement>();
-  const { data: session } = useSession();
-
-  const [beginAudio, setBeginAudio] = useState(false);
-
   const yearlySongData = getMonthlyStreamingData(streams);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const displayDate = yearlySongData[currentIndex].displayDate;
-
   const currentMonth = yearlySongData[currentIndex];
   const topFive = currentMonth.allTracks.slice(-5).reverse();
 
+  const audioRef = useRef<HTMLAudioElement>();
+  const { data: session } = useSession();
+
+  const [beginAudio, setBeginAudio] = useState(false);
   const [audioSrc, setAudioSrc] = useState(null);
   const [currentlyPlayingIndex, setCurrentlyPlayingIndex] = useState(null);
 
@@ -88,7 +85,6 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
               Math.random() * (previewTracks.length - 1)
             );
 
-            console.log({ randomIndex });
             validIndex = previewTracks[randomIndex]?.previewUrl
               ? randomIndex
               : null;
@@ -125,7 +121,11 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
   return (
     <Box>
       <Box>
-        <audio ref={audioRef} src={beginAudio && audioSrc} autoPlay></audio>
+        <audio
+          ref={audioRef}
+          src={beginAudio ? audioSrc : ""}
+          autoPlay={audioSrc ? true : false}
+        ></audio>
         <Center py={6}>
           <Box
             maxW={"445px"}
@@ -159,7 +159,6 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
                   colorScheme="teal"
                   onClick={() => {
                     setBeginAudio(true);
-                    audioRef && audioRef.current.play();
                   }}
                 >
                   {playHistoryText}
@@ -248,7 +247,6 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
                               : { width: 0 }
                           }
                           transition="14.7s linear"
-                          // transition={{ ease: "easeOut", duration: 2 }}
                         ></Box>
                       )}
                     </Box>
