@@ -12,14 +12,16 @@ import {
 import { motion } from "framer-motion";
 
 import { useState, useEffect, useRef } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 
 import {
   getMonthlyStreamingData,
   getPreviewTrackData,
+  getMonthlyMatrixOfDatesPlayed,
 } from "features/spotify/utils";
 import { TrackStream, SpotifySearchResult } from "features/spotify/types";
 import { formatMilliseconds } from "features/spotify/utils";
+import Calendar from "components/Calendar";
 
 type Props = {
   streams: TrackStream[];
@@ -49,10 +51,12 @@ const searchMusic = async (token: string, searchQueries: string[]) => {
 const MonthlyTopFive = ({ streams, token }: Props) => {
   const yearlySongData = getMonthlyStreamingData(streams);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const displayDate = yearlySongData[currentIndex].displayDate;
-  const currentMonth = yearlySongData[currentIndex];
-  const topFive = currentMonth.allTracks.slice(-5).reverse();
+  const [currentIndex, setCurrentIndex] = useState(20);
+
+  const currentMonthTrackData = yearlySongData[currentIndex];
+  const displayDate = currentMonthTrackData.displayDate;
+  const topFive = currentMonthTrackData.allTracks.slice(-5).reverse();
+  const [year, month] = currentMonthTrackData.monthYear.split("-");
 
   const audioRef = useRef<HTMLAudioElement>();
   const { data: session } = useSession();
@@ -62,6 +66,18 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
   const [currentlyPlayingIndex, setCurrentlyPlayingIndex] = useState(null);
 
   const [randomizeTopFive, setRandomizeTopFive] = useState(false);
+
+  const currentSong = topFive[currentlyPlayingIndex];
+
+  console.log({ currentSong });
+
+  const calendarData = getMonthlyMatrixOfDatesPlayed(
+    year,
+    month,
+    currentSong?.datesPlayed || []
+  );
+
+  console.log({ calendarData });
 
   useEffect(() => {
     const searchQueries = topFive.map((song) => {
@@ -138,8 +154,9 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
           >
             {!beginAudio && (
               <Box zIndex={20} backgroundColor="lightgreen" padding={3}>
-                Take a trip down memory lane with your top songs played for each
-                month. Logging in with Spotify is required for audio playback.
+                Take a trip down memory by listening to your top played songs
+                for each month. Logging in with Spotify is required for audio
+                playback.
                 {!session && (
                   <Button
                     mt={4}
@@ -180,24 +197,26 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
                 opacity={beginAudio ? 1 : 0.3}
                 filter={beginAudio ? "" : "blur(0.2rem)"}
               >
-                <Box h={"100px"} bg={"gray.100"} mt={-6} mx={-6} mb={6}>
+                <Box bg={"gray.100"} mt={-6} mx={-6} mb={6}>
                   <Heading textAlign="center">{displayDate}</Heading>
+                  <Box textAlign="center" p={2}>
+                    <Calendar data={calendarData} onlyShowDatesInMonth={true} />
+                  </Box>
                 </Box>
                 <Stack direction="row" spacing={8}>
                   <Stack spacing={0}>
                     <Text>Monthly Play Time </Text>
                     <Text fontWeight={800}>
-                      {currentMonth.totalTimePlayedDisplay}
+                      {currentMonthTrackData.totalTimePlayedDisplay}
                     </Text>
                   </Stack>
                   <Stack spacing={0}>
                     <Text> # Unique Songs</Text>
                     <Text fontWeight={800}>
-                      {currentMonth.allTracks.length}
+                      {currentMonthTrackData.allTracks.length}
                     </Text>
                   </Stack>
                 </Stack>
-                <Stack></Stack>
                 {topFive.map((track, index) => {
                   const isCurrentlyPlaying = index === currentlyPlayingIndex;
                   return (
@@ -246,7 +265,7 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
                               ? { width: "100%" }
                               : { width: 0 }
                           }
-                          transition="14.7s linear"
+                          transition={`${playTime / 1000}s linear`}
                         ></Box>
                       )}
                     </Box>
