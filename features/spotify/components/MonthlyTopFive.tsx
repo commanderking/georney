@@ -23,6 +23,8 @@ import { TrackStream, SpotifySearchResult } from "features/spotify/types";
 import { formatMilliseconds } from "features/spotify/utils";
 import Calendar from "components/Calendar";
 
+import { initialSongIndex } from "features/spotify/constants";
+
 type Props = {
   streams: TrackStream[];
   token: string | null;
@@ -51,7 +53,7 @@ const searchMusic = async (token: string, searchQueries: string[]) => {
 const MonthlyTopFive = ({ streams, token }: Props) => {
   const yearlySongData = getMonthlyStreamingData(streams);
 
-  const [currentIndex, setCurrentIndex] = useState(20);
+  const [currentIndex, setCurrentIndex] = useState(initialSongIndex);
 
   const currentMonthTrackData = yearlySongData[currentIndex];
   const displayDate = currentMonthTrackData.displayDate;
@@ -107,7 +109,7 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
           }
           if (!validIndex) {
             validIndex = previewTracks.findIndex((previewTrack) =>
-              Boolean(previewTrack.previewUrl)
+              Boolean(previewTrack?.previewUrl)
             );
           }
 
@@ -198,9 +200,14 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
                 filter={beginAudio ? "" : "blur(0.2rem)"}
               >
                 <Box bg={"gray.100"} mt={-6} mx={-6} mb={6}>
-                  <Heading textAlign="center">{displayDate}</Heading>
-                  <Box textAlign="center" p={2}>
-                    <Calendar data={calendarData} onlyShowDatesInMonth={true} />
+                  <Box textAlign="center">
+                    <Heading size="lg">{displayDate}</Heading>
+                    <Box p={2} display="inline-block">
+                      <Calendar
+                        data={calendarData}
+                        onlyShowDatesInMonth={true}
+                      />
+                    </Box>
                   </Box>
                 </Box>
                 <Stack direction="row" spacing={8}>
@@ -230,7 +237,7 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
                         animate={{ opacity: 1 }}
                         transition="1s linear"
                         key={track.id}
-                        mt={2}
+                        mt={0}
                         direction={"row"}
                         spacing={4}
                         align={"center"}
@@ -246,8 +253,9 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
                           fontSize={"sm"}
                           width="60%"
                         >
-                          <Text fontWeight={600}>{track.trackName}</Text>
-                          <Text fontWeight={400}>{track.artistName}</Text>
+                          <Text fontWeight={600}>
+                            {track.trackName} - {track.artistName}
+                          </Text>
                           <Text color={"gray.500"}>
                             {track.count} plays (
                             {formatMilliseconds(track.msPlayed)})

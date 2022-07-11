@@ -1,3 +1,5 @@
+export const initialSongIndex = 0;
+
 export const redColorScale = [
   "#F8D2D0",
   "#F1A4A1",

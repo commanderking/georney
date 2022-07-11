@@ -8,12 +8,23 @@ type Props = {
   onlyShowDatesInMonth: boolean;
 };
 
+const daysOfWeek = ["Su", "M", "T", "W", "Th", "F", "Sa"].map((day) => ({
+  day,
+  color: "lightgray",
+}));
+
 const Calendar = ({ data, onlyShowDatesInMonth }: Props) => {
-  const width = 30;
-  const height = 30;
+  const width = 35;
+  const height = 35;
+
+  const dataWithHeader = [daysOfWeek, ...data];
   return (
-    <svg height={height * data.length} width={width * 7}>
-      {data.map((weeks, weekIndex) => {
+    <svg
+      style={{ display: "inline-block" }}
+      height={height * data.length}
+      width={width * 7}
+    >
+      {dataWithHeader.map((weeks, weekIndex) => {
         return (
           <g y={height * weekIndex}>
             {weeks.map((day, dayIndex) => {
