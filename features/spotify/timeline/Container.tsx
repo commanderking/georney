@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 
 import { useState, useEffect, useRef } from "react";
-import { useSession, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import {
   getMonthlyStreamingData,
   getPreviewTrackData,
@@ -106,76 +106,75 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
 
   return (
     <Box>
-      <Box>
-        <audio
-          ref={audioRef}
-          src={beginAudio ? audioSrc : ""}
-          autoPlay={audioSrc ? true : false}
-          loop
+      <audio
+        ref={audioRef}
+        src={beginAudio ? audioSrc : ""}
+        autoPlay={audioSrc ? true : false}
+        loop
+      />
+      <Box maxW="445px" margin="auto">
+        <Intro
+          beginAudio={beginAudio}
+          session={session}
+          setBeginAudio={setBeginAudio}
+          randomizeTopFive={randomizeTopFive}
+          setRandomizeTopFive={setRandomizeTopFive}
         />
-        <Center py={6}>
+      </Box>
+      <Center py={6}>
+        <Box
+          maxW={"445px"}
+          w={"full"}
+          bg={useColorModeValue("white", "gray.900")}
+          boxShadow={"2xl"}
+          rounded={"md"}
+          overflow={"hidden"}
+          border="1px solid lightgray"
+        >
           <Box
-            maxW={"445px"}
-            w={"full"}
-            bg={useColorModeValue("white", "gray.900")}
-            boxShadow={"2xl"}
-            rounded={"md"}
-            overflow={"hidden"}
-            border="1px solid lightgray"
+            opacity={beginAudio ? 1 : 0.3}
+            filter={beginAudio ? "" : "blur(0.2rem)"}
+            p={5}
           >
-            <Intro
-              beginAudio={beginAudio}
-              session={session}
-              setBeginAudio={setBeginAudio}
-              randomizeTopFive={randomizeTopFive}
-              setRandomizeTopFive={setRandomizeTopFive}
-            />
-            <Box
-              opacity={beginAudio ? 1 : 0.3}
-              filter={beginAudio ? "" : "blur(0.2rem)"}
-              p={5}
-            >
-              <Center>
-                <Box p={2}>
-                  <Heading size="lg">{displayDate}</Heading>
-                </Box>
-              </Center>
-              <Box m={2}>
-                {topFive.map((track, index) => {
-                  const isCurrentlyPlaying = index === currentlyPlayingIndex;
-                  return (
-                    <Track
-                      track={track}
-                      isCurrentlyPlaying={isCurrentlyPlaying}
-                      index={index}
-                      animatePlayTime={animatePlayTime}
-                    />
-                  );
-                })}
-              </Box>
-            </Box>
-            <Box bg={"gray.100"} p={4} textAlign="center">
-              <Box p={2} display="inline-block">
-                <Calendar data={calendarData} onlyShowDatesInMonth={true} />
-              </Box>
-              <Stack direction="row" spacing={8}>
-                <Stack spacing={0}>
-                  <Text>Monthly Play Time </Text>
-                  <Text fontWeight={800}>
-                    {currentMonthTrackData.totalTimePlayedDisplay}
-                  </Text>
-                </Stack>
-                <Stack spacing={0}>
-                  <Text> # Unique Songs</Text>
-                  <Text fontWeight={800}>
-                    {currentMonthTrackData.allTracks.length}
-                  </Text>
-                </Stack>
-              </Stack>
+            <Center>
+              <Heading p={2} size="lg">
+                {displayDate}
+              </Heading>
+            </Center>
+            <Box m={2}>
+              {topFive.map((track, index) => {
+                return (
+                  <Track
+                    track={track}
+                    isCurrentlyPlaying={index === currentlyPlayingIndex}
+                    index={index}
+                    animatePlayTime={animatePlayTime}
+                  />
+                );
+              })}
             </Box>
           </Box>
-        </Center>
-      </Box>
+          <Box bg={"gray.100"} p={4} textAlign="center">
+            <Box p={2} display="inline-block">
+              <Calendar data={calendarData} onlyShowDatesInMonth={true} />
+            </Box>
+            <Stack direction="row" spacing={8}>
+              <Stack spacing={0}>
+                <Text>Monthly Play Time </Text>
+                <Text fontWeight={800}>
+                  {currentMonthTrackData.totalTimePlayedDisplay}
+                </Text>
+              </Stack>
+              <Stack spacing={0}>
+                <Text> # Unique Songs</Text>
+                <Text fontWeight={800}>
+                  {currentMonthTrackData.allTracks.length}
+                </Text>
+              </Stack>
+            </Stack>
+          </Box>
+        </Box>
+      </Center>
     </Box>
   );
 };

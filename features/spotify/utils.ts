@@ -329,8 +329,8 @@ export const getMonthlyStreamingData = (streams: TrackStream[]) => {
       const tracks = Object.values(streamsByMonthYear);
 
       const sortedTracks: MonthlyTrackStream[] = _.sortBy(tracks, [
-        "count",
         "msPlayed",
+        "count",
       ]);
 
       const monthlyData = sortedTracks.reduce(
@@ -408,8 +408,6 @@ export const getMonthlyMatrixOfDatesPlayed = (
       [day]: allDates[day] ? allDates[day] + 1 : 1,
     };
   }, {});
-
-  console.log({ datesPlayedCounts });
 
   return calendarMatrix.map((week) => {
     return week.map((day) => {
