@@ -14,8 +14,8 @@ const daysOfWeek = ["Su", "M", "T", "W", "Th", "F", "Sa"].map((day) => ({
 }));
 
 const Calendar = ({ data, onlyShowDatesInMonth }: Props) => {
-  const width = 35;
-  const height = 35;
+  const width = 45;
+  const height = 45;
 
   const dataWithHeader = [daysOfWeek, ...data];
   return (

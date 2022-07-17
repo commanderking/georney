@@ -358,7 +358,7 @@ export const getMonthlyStreamingData = (streams: TrackStream[]) => {
     const splitDate = key.split("-");
     const displayDate = `${moment(Number(splitDate[1]) + 1, "MM").format(
       "MMMM"
-    )}, ${splitDate[0]}`;
+    )} - ${splitDate[0]}`;
 
     const data: MonthlyData = {
       ...value,

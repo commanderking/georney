@@ -23,7 +23,7 @@ import { TrackStream, SpotifySearchResult } from "features/spotify/types";
 import { formatMilliseconds } from "features/spotify/utils";
 import Calendar from "components/Calendar";
 
-import { initialSongIndex } from "features/spotify/constants";
+import { initialSongIndex, topXSongs } from "features/spotify/constants";
 
 type Props = {
   streams: TrackStream[];
@@ -57,7 +57,7 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
 
   const currentMonthTrackData = yearlySongData[currentIndex];
   const displayDate = currentMonthTrackData.displayDate;
-  const topFive = currentMonthTrackData.allTracks.slice(-5).reverse();
+  const topFive = currentMonthTrackData.allTracks.slice(-topXSongs).reverse();
   const [year, month] = currentMonthTrackData.monthYear.split("-");
 
   const audioRef = useRef<HTMLAudioElement>();
@@ -151,8 +151,8 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
             bg={useColorModeValue("white", "gray.900")}
             boxShadow={"2xl"}
             rounded={"md"}
-            p={6}
             overflow={"hidden"}
+            border="1px solid lightgray"
           >
             {!beginAudio && (
               <Box zIndex={20} backgroundColor="lightgreen" padding={3}>
@@ -198,89 +198,93 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
               <Box
                 opacity={beginAudio ? 1 : 0.3}
                 filter={beginAudio ? "" : "blur(0.2rem)"}
+                p={5}
               >
-                <Box bg={"gray.100"} mt={-6} mx={-6} mb={6}>
-                  <Box textAlign="center">
+                <Center>
+                  <Box p={2}>
                     <Heading size="lg">{displayDate}</Heading>
-                    <Box p={2} display="inline-block">
-                      <Calendar
-                        data={calendarData}
-                        onlyShowDatesInMonth={true}
-                      />
-                    </Box>
                   </Box>
-                </Box>
-                <Stack direction="row" spacing={8}>
-                  <Stack spacing={0}>
-                    <Text>Monthly Play Time </Text>
-                    <Text fontWeight={800}>
-                      {currentMonthTrackData.totalTimePlayedDisplay}
-                    </Text>
-                  </Stack>
-                  <Stack spacing={0}>
-                    <Text> # Unique Songs</Text>
-                    <Text fontWeight={800}>
-                      {currentMonthTrackData.allTracks.length}
-                    </Text>
-                  </Stack>
-                </Stack>
-                {topFive.map((track, index) => {
-                  const isCurrentlyPlaying = index === currentlyPlayingIndex;
-                  return (
-                    <Box
-                      key={track.id}
-                      backgroundColor={isCurrentlyPlaying ? "lightgreen" : ""}
-                    >
-                      <Stack
-                        as={motion.div}
-                        opacity={0}
-                        animate={{ opacity: 1 }}
-                        transition="1s linear"
+                </Center>
+                <Box m={2}>
+                  {topFive.map((track, index) => {
+                    const isCurrentlyPlaying = index === currentlyPlayingIndex;
+                    return (
+                      <Box
                         key={track.id}
-                        mt={0}
-                        direction={"row"}
-                        spacing={4}
-                        align={"center"}
-                        minHeight={75}
-                        borderRadius={10}
-                        padding={2}
+                        backgroundColor={isCurrentlyPlaying ? "lightgreen" : ""}
                       >
-                        <Text>#{index + 1}</Text>
-                        <Avatar name={track.artistName} />
                         <Stack
-                          direction={"column"}
-                          spacing={0}
-                          fontSize={"sm"}
-                          width="60%"
-                        >
-                          <Text fontWeight={600}>
-                            {track.trackName} - {track.artistName}
-                          </Text>
-                          <Text color={"gray.500"}>
-                            {track.count} plays (
-                            {formatMilliseconds(track.msPlayed)})
-                          </Text>
-                        </Stack>
-                      </Stack>
-                      {isCurrentlyPlaying && (
-                        <Box
                           as={motion.div}
-                          backgroundColor="black"
-                          width={0}
-                          height={1}
-                          animate={
-                            beginAudio && currentlyPlayingIndex !== null
-                              ? { width: "100%" }
-                              : { width: 0 }
-                          }
-                          transition={`${playTime / 1000}s linear`}
-                        ></Box>
-                      )}
-                    </Box>
-                  );
-                })}
+                          opacity={0}
+                          animate={{ opacity: 1 }}
+                          transition="1s linear"
+                          key={track.id}
+                          mt={0}
+                          direction={"row"}
+                          spacing={4}
+                          align={"center"}
+                          minHeight={55}
+                          borderRadius={10}
+                          padding={1}
+                        >
+                          <Text>#{index + 1}</Text>
+                          <Avatar size="sm" name={track.artistName} />
+                          <Stack
+                            direction={"column"}
+                            spacing={0}
+                            fontSize={"sm"}
+                            width="60%"
+                          >
+                            <Text fontWeight={600}>
+                              {track.trackName} - {track.artistName}
+                            </Text>
+                            <Text color={"gray.500"}>
+                              {track.count} plays (
+                              {formatMilliseconds(track.msPlayed)})
+                            </Text>
+                          </Stack>
+                        </Stack>
+                        {isCurrentlyPlaying && (
+                          <Box
+                            as={motion.div}
+                            backgroundColor="black"
+                            width={0}
+                            height={1}
+                            animate={
+                              beginAudio && currentlyPlayingIndex !== null
+                                ? { width: "100%" }
+                                : { width: 0 }
+                            }
+                            transition={`${playTime / 1000}s linear`}
+                          ></Box>
+                        )}
+                      </Box>
+                    );
+                  })}
+                </Box>
               </Box>
             }
+            <Box bg={"gray.100"} p={4}>
+              <Box textAlign="center">
+                <Box p={2} display="inline-block">
+                  <Calendar data={calendarData} onlyShowDatesInMonth={true} />
+                </Box>
+              </Box>
+              <Stack direction="row" spacing={8}>
+                <Stack spacing={0}>
+                  <Text>Monthly Play Time </Text>
+                  <Text fontWeight={800}>
+                    {currentMonthTrackData.totalTimePlayedDisplay}
+                  </Text>
+                </Stack>
+                <Stack spacing={0}>
+                  <Text> # Unique Songs</Text>
+                  <Text fontWeight={800}>
+                    {currentMonthTrackData.allTracks.length}
+                  </Text>
+                </Stack>
+              </Stack>
+            </Box>
           </Box>
         </Center>
       </Box>
