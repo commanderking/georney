@@ -15,6 +15,7 @@ import scaleCluster from "d3-scale-cluster";
 import { redColorScale } from "features/spotify/constants";
 import { LegendData } from "features/spotify/types";
 import { isArray } from "@material-ui/data-grid";
+import { getCalendarMatrix } from "utils/date";
 
 export const getHoursAndMinutes = (milliseconds: number) => {
   const time = moment.duration(milliseconds);
@@ -357,7 +358,7 @@ export const getMonthlyStreamingData = (streams: TrackStream[]) => {
     const splitDate = key.split("-");
     const displayDate = `${moment(Number(splitDate[1]) + 1, "MM").format(
       "MMMM"
-    )}, ${splitDate[0]}`;
+    )} - ${splitDate[0]}`;
 
     const data: MonthlyData = {
       ...value,
@@ -389,4 +390,33 @@ export const getPreviewTrackData = (spotifySearch: SpotifySearchResult) => {
     id,
     previewUrl: preview_url,
   };
+};
+
+export const getMonthlyMatrixOfDatesPlayed = (
+  year: string | number,
+  month: string | number,
+  datesPlayed: string[] = []
+) => {
+  const calendarMatrix = getCalendarMatrix(year, month);
+
+  const datesPlayedCounts = datesPlayed.reduce((allDates, currentDate) => {
+    const date = new Date(currentDate);
+    const day = date.getDate();
+
+    return {
+      ...allDates,
+      [day]: allDates[day] ? allDates[day] + 1 : 1,
+    };
+  }, {});
+
+  console.log({ datesPlayedCounts });
+
+  return calendarMatrix.map((week) => {
+    return week.map((day) => {
+      return {
+        day,
+        color: datesPlayedCounts[day] ? "lightgreen" : "white",
+      };
+    });
+  });
 };
