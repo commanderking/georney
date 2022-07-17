@@ -7,7 +7,7 @@ import {
   processInitialData,
   convertExtendedStreamToRawStream,
 } from "features/spotify/utils";
-import MonthlyTopFive from "features/spotify/timeline/MonthlyTopFive";
+import MonthlyTopFive from "features/spotify/timeline/Container";
 import { useSession, signIn, signOut } from "next-auth/react";
 
 const getToken = async () => {

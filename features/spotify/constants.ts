@@ -1,5 +1,6 @@
 export const initialSongIndex = 0;
 export const topXSongs = 5;
+export const playTime = 15000;
 
 export const redColorScale = [
   "#F8D2D0",
