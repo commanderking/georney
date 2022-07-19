@@ -13,7 +13,7 @@ import moment from "moment";
 import { formatData } from "components/timelineHeatMap/utils";
 import scaleCluster from "d3-scale-cluster";
 import { redColorScale } from "features/spotify/constants";
-import { LegendData } from "features/spotify/types";
+import { LegendData, TopTrack } from "features/spotify/types";
 import { isArray } from "@material-ui/data-grid";
 import { getCalendarMatrix } from "utils/date";
 
@@ -329,8 +329,8 @@ export const getMonthlyStreamingData = (streams: TrackStream[]) => {
       const tracks = Object.values(streamsByMonthYear);
 
       const sortedTracks: MonthlyTrackStream[] = _.sortBy(tracks, [
-        "count",
         "msPlayed",
+        "count",
       ]);
 
       const monthlyData = sortedTracks.reduce(
@@ -384,12 +384,33 @@ export const getPreviewTrackData = (spotifySearch: SpotifySearchResult) => {
   if (spotifySearch.tracks.items.length === 0) {
     return null;
   }
+
   const { id, preview_url } = spotifySearch.tracks.items[0];
 
   return {
-    id,
+    spotifyId: id,
     previewUrl: preview_url,
   };
+};
+
+const shuffleTracks = (tracks: TopTrack[], randomizeTopFive) => {
+  if (randomizeTopFive) {
+    return tracks
+      .map((value) => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value);
+  }
+};
+
+export const getCurrentTrackId = (
+  tracks: TopTrack[],
+  { randomizeTopFive }: { randomizeTopFive: boolean }
+) => {
+  const tracksShuffled = randomizeTopFive
+    ? shuffleTracks(tracks, randomizeTopFive)
+    : tracks;
+  const trackWithPreviewUrl = tracksShuffled.find((track) => track.previewUrl);
+  return trackWithPreviewUrl?.id;
 };
 
 export const getMonthlyMatrixOfDatesPlayed = (
@@ -408,8 +429,6 @@ export const getMonthlyMatrixOfDatesPlayed = (
       [day]: allDates[day] ? allDates[day] + 1 : 1,
     };
   }, {});
-
-  console.log({ datesPlayedCounts });
 
   return calendarMatrix.map((week) => {
     return week.map((day) => {

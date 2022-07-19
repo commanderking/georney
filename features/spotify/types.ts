@@ -152,6 +152,8 @@ export type SpotifySearchResult = {
 };
 
 type FormattedSpotifyTrack = {
-  id: string;
-  preview_url: string | null;
+  spotifyId: string;
+  previewUrl: string | null;
 } | null;
+
+export type TopTrack = MonthlyTrackStream & FormattedSpotifyTrack;
