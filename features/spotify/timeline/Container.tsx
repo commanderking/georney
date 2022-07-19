@@ -13,6 +13,7 @@ import {
   getMonthlyStreamingData,
   getPreviewTrackData,
   getMonthlyMatrixOfDatesPlayed,
+  getCurrentTrackId,
 } from "features/spotify/utils";
 import { TrackStream, SpotifySearchResult } from "features/spotify/types";
 import Calendar from "components/Calendar";
@@ -38,7 +39,7 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
 
   const currentMonthTrackData = yearlySongData[currentIndex];
   const displayDate = currentMonthTrackData.displayDate;
-  const topFive = currentMonthTrackData.allTracks.slice(-topXSongs).reverse();
+  const topSongs = currentMonthTrackData.allTracks.slice(-topXSongs).reverse();
   const [year, month] = currentMonthTrackData.monthYear.split("-");
 
   const audioRef = useRef<HTMLAudioElement>();
@@ -46,11 +47,12 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
 
   const [beginAudio, setBeginAudio] = useState(false);
   const [audioSrc, setAudioSrc] = useState(null);
-  const [currentlyPlayingIndex, setCurrentlyPlayingIndex] = useState(null);
-
+  const [currentTrackId, setCurrentTrackId] = useState(null);
   const [randomizeTopFive, setRandomizeTopFive] = useState(false);
 
-  const currentSong = topFive[currentlyPlayingIndex];
+  const [displayedSongs, setDisplayedSongs] = useState(topSongs);
+
+  const currentSong = topSongs.find((tracks) => tracks.id === currentTrackId);
 
   const calendarData = getMonthlyMatrixOfDatesPlayed(
     year,
@@ -60,35 +62,27 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
 
   useEffect(() => {
     if (token) {
-      searchTrackByNameAndArtist(token, topFive).then(
+      searchTrackByNameAndArtist(token, topSongs).then(
         (results: SpotifySearchResult[]) => {
-          setCurrentlyPlayingIndex(null);
-          const previewTracks = results.map((result) =>
-            getPreviewTrackData(result)
+          setCurrentTrackId(null);
+          const topTracks = results.map((result, index) => {
+            const spotifyTrackData = getPreviewTrackData(result);
+            return {
+              ...spotifyTrackData,
+              ...topSongs[index],
+            };
+          });
+
+          const currentTrackId = getCurrentTrackId(topTracks, {
+            randomizeTopFive,
+          });
+          const currentTrack = topTracks.find(
+            (track) => track.id === currentTrackId
           );
 
-          let validIndex = null;
-          if (randomizeTopFive) {
-            const randomIndex = Math.round(
-              Math.random() * (previewTracks.length - 1)
-            );
-
-            validIndex = previewTracks[randomIndex]?.previewUrl
-              ? randomIndex
-              : null;
-          }
-          if (!validIndex) {
-            validIndex = previewTracks.findIndex((previewTrack) =>
-              Boolean(previewTrack?.previewUrl)
-            );
-          }
-
-          const previewUrl = validIndex > -1 && previewTracks[validIndex];
-          if (previewUrl) {
-            setAudioSrc(previewTracks[validIndex].previewUrl);
-          }
-
-          setCurrentlyPlayingIndex(validIndex);
+          setDisplayedSongs(topTracks);
+          setCurrentTrackId(currentTrackId);
+          setAudioSrc(currentTrack?.previewUrl);
 
           if (beginAudio) {
             const consecutivePlayTimeout = setTimeout(() => {
@@ -102,7 +96,7 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
     }
   }, [token, currentIndex, beginAudio]);
 
-  const animatePlayTime = beginAudio && currentlyPlayingIndex !== null;
+  const animatePlayTime = beginAudio && currentTrackId !== null;
 
   return (
     <Box>
@@ -142,11 +136,16 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
               </Heading>
             </Center>
             <Box m={2}>
-              {topFive.map((track, index) => {
+              {!currentTrackId && (
+                <Text>
+                  No Preview Audio Available from Spotify for Top 5 Songs :(
+                </Text>
+              )}
+              {displayedSongs.map((track, index) => {
                 return (
                   <Track
                     track={track}
-                    isCurrentlyPlaying={index === currentlyPlayingIndex}
+                    isCurrentlyPlaying={track.id === currentTrackId}
                     index={index}
                     animatePlayTime={animatePlayTime}
                   />

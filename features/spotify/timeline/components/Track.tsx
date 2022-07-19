@@ -7,7 +7,7 @@ import { playTime } from "features/spotify/constants";
 const Track = ({ track, isCurrentlyPlaying, index, animatePlayTime }) => {
   return (
     <Box
-      key={track.id}
+      key={`${track.id}-${index}`}
       backgroundColor={isCurrentlyPlaying ? "lightgreen" : ""}
     >
       <Stack
