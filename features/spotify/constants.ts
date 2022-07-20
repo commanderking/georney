@@ -1,5 +1,5 @@
-export const initialSongIndex = 57;
-export const topXSongs = 10;
+export const initialSongIndex = 20;
+export const topXSongs = 5;
 export const playTime = 15000;
 
 export const redColorScale = [
