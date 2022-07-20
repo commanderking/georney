@@ -7,6 +7,7 @@ import {
   MonthlyTrackStream,
   MonthlyData,
   SpotifySearchResult,
+  ArtistCount,
 } from "features/spotify/types";
 import _ from "lodash";
 import moment from "moment";
@@ -348,7 +349,6 @@ export const getMonthlyStreamingData = (streams: TrackStream[]) => {
           totalTimePlayed: 0,
         }
       );
-
       return monthlyData;
     }
   );
@@ -379,6 +379,40 @@ export const getMonthlyStreamingData = (streams: TrackStream[]) => {
     return sortingDate;
   });
 };
+
+const artistInitialCount: { [index: string]: ArtistCount } = {};
+
+export const getTopArtistsForMonth = (monthlyData: MonthlyData) => {
+  const countsByArtist = monthlyData.allTracks.reduce(
+    (artistStats, currentTrack) => {
+      const existingArtist = artistStats[currentTrack.artistName];
+
+      return {
+        ...artistStats,
+        [currentTrack.artistName]: {
+          msPlayed: currentTrack.msPlayed + (existingArtist?.msPlayed || 0),
+          count: currentTrack.count + (existingArtist?.count || 0),
+          artistName: currentTrack.artistName,
+        },
+      };
+    },
+    artistInitialCount
+  );
+
+  const artistCounts: ArtistCount[] = Object.values(countsByArtist).sort(
+    (a: ArtistCount, b: ArtistCount) => b.msPlayed - a.msPlayed
+  );
+
+  return artistCounts;
+};
+
+type artists = [
+  {
+    artistName: "Inon Zur";
+    playTime: 24523;
+    tracks: [];
+  }
+];
 
 export const getPreviewTrackData = (spotifySearch: SpotifySearchResult) => {
   if (spotifySearch.tracks.items.length === 0) {

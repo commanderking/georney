@@ -157,3 +157,9 @@ type FormattedSpotifyTrack = {
 } | null;
 
 export type TopTrack = MonthlyTrackStream & FormattedSpotifyTrack;
+
+export type ArtistCount = {
+  artistName: string;
+  msPlayed: number;
+  count: number;
+};

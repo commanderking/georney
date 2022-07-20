@@ -7,13 +7,14 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import {
   getMonthlyStreamingData,
   getPreviewTrackData,
   getMonthlyMatrixOfDatesPlayed,
   getCurrentTrackId,
+  getTopArtistsForMonth,
 } from "features/spotify/utils";
 import { TrackStream, SpotifySearchResult } from "features/spotify/types";
 import Calendar from "components/Calendar";
@@ -33,7 +34,12 @@ type Props = {
 };
 
 const MonthlyTopFive = ({ streams, token }: Props) => {
-  const yearlySongData = getMonthlyStreamingData(streams);
+  const yearlySongData = useMemo(
+    () => getMonthlyStreamingData(streams),
+    [streams]
+  );
+
+  console.log({ yearlySongData });
 
   const [currentIndex, setCurrentIndex] = useState(initialSongIndex);
 
@@ -41,6 +47,11 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
   const displayDate = currentMonthTrackData.displayDate;
   const topSongs = currentMonthTrackData.allTracks.slice(-topXSongs).reverse();
   const [year, month] = currentMonthTrackData.monthYear.split("-");
+
+  const artistsOfTheMonth = useMemo(
+    () => getTopArtistsForMonth(currentMonthTrackData),
+    [currentMonthTrackData]
+  );
 
   const audioRef = useRef<HTMLAudioElement>();
   const { data: session } = useSession();
@@ -82,7 +93,7 @@ const MonthlyTopFive = ({ streams, token }: Props) => {
 
           setDisplayedSongs(topTracks);
           setCurrentTrackId(currentTrackId);
-          setAudioSrc(currentTrack?.previewUrl);
+          // setAudioSrc(currentTrack?.previewUrl);
 
           if (beginAudio) {
             const consecutivePlayTimeout = setTimeout(() => {
